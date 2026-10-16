@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <connectionStrings>
+    <add name="BenhAnDb" connectionString="User Id=BENHAN;Password=YOUR_PASSWORD;Data Source=localhost:1521/ORCL;" providerName="Oracle.ManagedDataAccess.Client" />
+  </connectionStrings>
+</configuration>

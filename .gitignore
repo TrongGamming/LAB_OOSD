@@ -1,0 +1,79 @@
+# Chỉ đưa lên git: báo cáo .docx, README.md, script CSDL và mã nguồn ứng dụng WinForms
+
+# 1. Bỏ qua tất cả
+*
+!.gitignore
+
+# 2. Cho phép đi vào thư mục con (để tìm các file được giữ lại bên trong)
+!*/
+
+# 3. Báo cáo và mô tả
+!*.docx
+!README.md
+
+# 4. Script cơ sở dữ liệu đang dùng
+!LAB_02/QuanLyThuVienSo.sql
+!LAB_03/QuanLyKhachSan.sql
+!LAB_03/QuanLyKhachSan_MoRong.sql
+!LAB_04/EShopping.sql
+!LAB_05/QuanLyDuLich.sql
+!LAB_06/QuanLyBenhAn.sql
+
+# 5. Mã nguồn ứng dụng WinForms
+!LAB_02/ThuVienSo/**
+!LAB_03/QuanLyKhachSan/**
+# LAB_04: chỉ mã nguồn C# (kèm file project/solution để mở được bằng Visual Studio)
+!LAB_04/EShopping/**/*.cs
+!LAB_04/EShopping/**/*.csproj
+!LAB_04/EShopping/*.sln
+!LAB_04/EShopping/**/App.config.example
+!LAB_04/bai4mini.png
+# LAB_05: giống LAB_04
+!LAB_05/QuanLyDuLich/**/*.cs
+!LAB_05/QuanLyDuLich/**/*.csproj
+!LAB_05/QuanLyDuLich/*.sln
+!LAB_05/QuanLyDuLich/**/App.config.example
+# LAB_06: báo cáo Word, SQL, README và mã nguồn WinForms
+!LAB_06/QuanLyBenhAn/**/*.cs
+!LAB_06/QuanLyBenhAn/**/*.csproj
+!LAB_06/QuanLyBenhAn/*.sln
+!LAB_06/QuanLyBenhAn/**/App.config.example
+
+# 6. App.config chứa mật khẩu Oracle của từng máy -> không đưa lên, dùng App.config.example làm mẫu
+LAB_02/ThuVienSo/ThuVienSo/App.config
+LAB_03/QuanLyKhachSan/QuanLyKhachSan/App.config
+LAB_04/EShopping/EShopping/App.config
+LAB_05/QuanLyDuLich/QuanLyDuLich/App.config
+LAB_06/QuanLyBenhAn/QuanLyBenhAn/App.config
+
+# 7. Kết quả build, thư viện NuGet tải về và file cấu hình riêng của Visual Studio
+**/bin/
+**/obj/
+**/packages/
+**/.vs/
+*.user
+*.suo
+
+# 8. File không thuộc mã nguồn: script dựng báo cáo, ảnh chụp màn hình, ghi chú riêng,
+#    thư mục của bạn, file nén và file tạm Word
+LAB_02/_build/
+LAB_03/_build/
+LAB_03/assets/
+LAB_04/_build/
+LAB_04/assets/
+LAB_05/_build/
+LAB_05/assets/
+LAB_06/_build/
+LAB_06/screenshots/
+LAB_06/plantuml/
+# LAB_05: chỉ giữ README gốc (LAB_05/README.md), bỏ README trong các thư mục phiên bản và ảnh minh họa
+LAB_05/PhienBan2/README.md
+LAB_05/PhienBan3/README.md
+LAB_05/screenshots/
+LAB_05/plantuml*/
+LAB_03/tay.md
+LAB_03/minh.md
+TuanMinh/
+DoAnCuoiKy/
+*.rar
+~$*.docx
