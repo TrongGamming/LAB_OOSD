@@ -18,6 +18,7 @@
 !LAB_04/EShopping.sql
 !LAB_05/QuanLyDuLich.sql
 !LAB_06/QuanLyBenhAn.sql
+!LAB_07/QuanLyNhanSu.sql
 
 # 5. Mã nguồn ứng dụng WinForms
 !LAB_02/ThuVienSo/**
@@ -38,6 +39,11 @@
 !LAB_06/QuanLyBenhAn/**/*.csproj
 !LAB_06/QuanLyBenhAn/*.sln
 !LAB_06/QuanLyBenhAn/**/App.config.example
+# LAB_07: bao cao, README, Oracle SQL va source WinForms
+!LAB_07/QuanLyNhanSu/**/*.cs
+!LAB_07/QuanLyNhanSu/**/*.csproj
+!LAB_07/QuanLyNhanSu/*.sln
+!LAB_07/QuanLyNhanSu/**/App.config.example
 
 # 6. App.config chứa mật khẩu Oracle của từng máy -> không đưa lên, dùng App.config.example làm mẫu
 LAB_02/ThuVienSo/ThuVienSo/App.config
@@ -45,6 +51,7 @@ LAB_03/QuanLyKhachSan/QuanLyKhachSan/App.config
 LAB_04/EShopping/EShopping/App.config
 LAB_05/QuanLyDuLich/QuanLyDuLich/App.config
 LAB_06/QuanLyBenhAn/QuanLyBenhAn/App.config
+LAB_07/QuanLyNhanSu/QuanLyNhanSu/App.config
 
 # 7. Kết quả build, thư viện NuGet tải về và file cấu hình riêng của Visual Studio
 **/bin/
@@ -66,6 +73,12 @@ LAB_05/assets/
 LAB_06/_build/
 LAB_06/screenshots/
 LAB_06/plantuml/
+LAB_07/_build/
+LAB_07/screenshots/
+LAB_07/plantuml/
+# Giu mo hinh UML nguon cua LAB_07 de co the xem va chinh sua lai.
+!LAB_07/plantuml/*.puml
+LAB_07/plantuml/png/
 # LAB_05: chỉ giữ README gốc (LAB_05/README.md), bỏ README trong các thư mục phiên bản và ảnh minh họa
 LAB_05/PhienBan2/README.md
 LAB_05/PhienBan3/README.md
