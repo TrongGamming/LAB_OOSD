@@ -1,0 +1,53 @@
+@startuml SD02_TaiSachDienTu
+title Sequence – Tải sách điện tử (UC-TC-04 «include» UC-XT-01)
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam SwimlaneTitleFontStyle bold
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam StateBackgroundColor #F3F6FA
+skinparam ClassBackgroundColor #F3F6FA
+autonumber
+actor "Độc giả" as U
+boundary FrmTraCuu as F
+boundary FrmNhapMaThe as FT
+control TheService as TS
+control TaiLieuService as S
+database "Oracle – THUVIENSO" as DB
+U -> F : chọn tài liệu, bấm "Tải về"
+activate F
+F -> FT : ShowDialog()
+activate FT
+U -> FT : nhập mã thẻ, bấm Xác nhận
+FT -> TS : XacThucMaThe(maThe)
+activate TS
+TS -> DB : sp_XacThucMaThe(:MaThe)
+alt thẻ không hợp lệ
+  DB --> TS : RAISE_APPLICATION_ERROR -20001/-20002/-20003
+  TS --> FT : Loi(thông điệp)
+  FT --> U : hiển thị lý do, cho nhập lại
+else hợp lệ
+  DB --> TS : MaThe, HoTen, HanSuDung
+  TS --> FT : Ok(TheInfo)
+  FT --> F : DialogResult.OK + maThe
+end
+deactivate TS
+deactivate FT
+F -> S : TaiVe(maThe, maTaiLieu)
+activate S
+S -> DB : sp_GhiLuotTai(:MaThe, :MaTaiLieu, :IP)
+alt không cho phép tải
+  DB --> S : RAISE_APPLICATION_ERROR -20010
+  S --> F : Loi("Tài liệu chỉ đọc trực tuyến")
+else
+  DB --> S : DuongDanTep, DinhDang
+  S -> S : sao chép tệp tới thư mục người dùng chọn
+  S --> F : Ok(đường dẫn tệp)
+end
+deactivate S
+F --> U : thông báo tải thành công
+deactivate F
+@enduml

@@ -1,0 +1,55 @@
+@startuml SD06_XetDuyetDatMua
+title Sequence – Xét duyệt yêu cầu đặt mua (UC-QT-02)
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam SwimlaneTitleFontStyle bold
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam StateBackgroundColor #F3F6FA
+skinparam ClassBackgroundColor #F3F6FA
+autonumber
+actor "Thủ thư" as TT
+boundary FrmDuyetDatMua as F
+control DatMuaService as S
+database "Oracle – THUVIENSO" as DB
+actor "Độc giả" as DG
+TT -> F : mở form
+activate F
+F -> S : LayDanhSach("ChoDuyet", tu, den)
+activate S
+S -> DB : SELECT yêu cầu ChoDuyet ORDER BY NgayGui,\nCOUNT(cùng TenSach, TacGia) AS SoNguoiDeNghi
+DB --> S : danh sách
+S --> F : List<YeuCauDatMua>
+deactivate S
+alt danh sách rỗng
+  F --> TT : "Không có yêu cầu chờ duyệt"
+else
+  TT -> F : chọn yêu cầu
+  F -> S : KiemTraTrungDanhMuc(tenSach, tacGia)
+  activate S
+  S -> DB : SELECT TaiLieu LIKE tên / tác giả
+  DB --> S : tài liệu tương tự
+  S --> F : gợi ý liên kết
+  deactivate S
+  TT -> F : chọn Chấp nhận / Từ chối (+ lý do), bấm Lưu
+  F -> F : Từ chối mà lý do rỗng -> yêu cầu nhập
+  F -> S : Duyet(id, maThuThu, quyetDinh, ghiChu, maTLLienKet)
+  activate S
+  S -> DB : sp_DuyetYeuCauDatMua(:Id, :MaThuThu, :QuyetDinh, ...)
+  alt SQL%ROWCOUNT = 0 (thủ thư khác đã duyệt)
+    DB --> S : RAISE_APPLICATION_ERROR -20062
+    S --> F : Loi(...)
+    F -> F : làm mới danh sách
+  else thành công
+    DB --> S : OK
+    S --> F : Ok
+    F -> F : bỏ dòng khỏi danh sách chờ
+  end
+  deactivate S
+end
+deactivate F
+DG -> DB : (sau đó) xem kết quả tại FrmDatMua – UC-TK-04
+@enduml

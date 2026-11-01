@@ -1,0 +1,131 @@
+@startuml ERD01_QuanLyThuVienSo
+title ERD – schema THUVIENSO (Oracle 19c)
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam SwimlaneTitleFontStyle bold
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam StateBackgroundColor #F3F6FA
+skinparam ClassBackgroundColor #F3F6FA
+hide circle
+skinparam linetype ortho
+entity ThuThu {
+  * MaThuThu : VARCHAR2(10) <<PK>>
+  --
+  HoTen, Email <<UQ>>, SoDienThoai, ChucVu, DangLamViec
+}
+entity DocGia {
+  * MaDocGia : VARCHAR2(10) <<PK>>
+  --
+  HoTen, LoaiDocGia, DonVi, NgaySinh, Email <<UQ>>, SoDienThoai, NgayTao
+}
+entity TheThuVien {
+  * MaThe : VARCHAR2(12) <<PK>>
+  --
+  MaDocGia <<FK>>, NgayCap, HanSuDung, TrangThai
+}
+entity TaiKhoan {
+  * MaTaiKhoan : NUMBER(10) IDENTITY <<PK>>
+  --
+  TenDangNhap <<UQ>>, MatKhauHash, MatKhauSalt, VaiTro,
+  MaDocGia <<FK,UQ>>, MaThuThu <<FK,UQ>>, TrangThai, SoLanSaiLienTiep
+}
+entity ChuDe {
+  * MaChuDe <<PK>>
+  --
+  TenChuDe <<UQ>>, MoTa
+}
+entity TacGia {
+  * MaTacGia <<PK>>
+  --
+  TenTacGia, GhiChu
+}
+entity NhaXuatBan {
+  * MaNXB <<PK>>
+  --
+  TenNXB <<UQ>>, DiaChi, SoDienThoai
+}
+entity TaiLieu {
+  * MaTaiLieu : VARCHAR2(10) <<PK>>
+  --
+  TenTaiLieu, LoaiTaiLieu, HinhThuc, MaChuDe <<FK>>,
+  MaNXB <<FK>>, NamXuatBan, MoTa, NgayTao, NgayCapNhat
+}
+entity TaiLieu_TacGia {
+  * MaTaiLieu <<PK,FK>>
+  * MaTacGia <<PK,FK>>
+  --
+  ThuTu
+}
+entity TepDienTu {
+  * MaTaiLieu <<PK,FK>>
+  --
+  DuongDanTep, DinhDang, DungLuongMB, ChoPhepTai
+}
+entity BanSao {
+  * MaBanSao : VARCHAR2(10) <<PK>>
+  --
+  MaTaiLieu <<FK>>, ViTriKe, NgayNhap, TinhTrang, GhiChu
+}
+entity DangKyMuon {
+  * Id : NUMBER(10) IDENTITY <<PK>>
+  --
+  MaDangKy <<UQ, VIRTUAL>>, MaThe <<FK>>, MaTaiLieu <<FK>>,
+  MaBanSaoGiu <<FK>>, NgayDangKy, HanNhan, TrangThai
+}
+entity PhieuMuon {
+  * Id : NUMBER(10) IDENTITY <<PK>>
+  --
+  MaPhieuMuon <<UQ, VIRTUAL>>, MaThe <<FK>>, MaBanSao <<FK>>,
+  DangKyId <<FK>>, MaThuThuLap <<FK>>, NgayMuon, HanTra,
+  NgayTra, MaThuThuNhan <<FK>>, TrangThai, SoNgayTre, GhiChu
+}
+entity LuotTai {
+  * Id : NUMBER(19) IDENTITY <<PK>>
+  --
+  MaTaiLieu <<FK>>, MaThe <<FK>>, ThoiDiem, DiaChiIP
+}
+entity YeuCauDatMua {
+  * Id : NUMBER(10) IDENTITY <<PK>>
+  --
+  MaYeuCau <<UQ, VIRTUAL>>, MaTaiKhoan <<FK>>, TenSach, TacGia,
+  NamXuatBan, NhaXuatBan, LyDoDeNghi, NgayGui, TrangThai,
+  MaThuThuDuyet <<FK>>, NgayDuyet, KetQuaGhiChu, MaTaiLieuLienKet <<FK>>
+}
+entity EmailNhacHan {
+  * Id : NUMBER(10) IDENTITY <<PK>>
+  --
+  MaEmail <<UQ, VIRTUAL>>, PhieuMuonId <<FK,UQ>>, DiaChiNhan, TieuDe,
+  NoiDung, ThoiDiemTao, ThoiDiemGui, TrangThai, SoLanThu, LoiGanNhat
+}
+entity NhatKyLapLich {
+  * Id : NUMBER(10) IDENTITY <<PK>>
+  --
+  TenCongViec, BatDau, KetThuc, SoBanGhiQuet, SoThanhCong, SoLoi
+}
+DocGia ||--o{ TheThuVien
+DocGia |o--o| TaiKhoan
+ThuThu |o--o| TaiKhoan
+ChuDe ||--o{ TaiLieu
+NhaXuatBan |o--o{ TaiLieu
+TaiLieu ||--o{ TaiLieu_TacGia
+TacGia ||--o{ TaiLieu_TacGia
+TaiLieu ||--o| TepDienTu
+TaiLieu ||--o{ BanSao
+TheThuVien ||--o{ DangKyMuon
+TaiLieu ||--o{ DangKyMuon
+BanSao ||--o{ DangKyMuon
+TheThuVien ||--o{ PhieuMuon
+BanSao ||--o{ PhieuMuon
+DangKyMuon |o--o| PhieuMuon
+ThuThu ||--o{ PhieuMuon
+TepDienTu ||--o{ LuotTai
+TheThuVien ||--o{ LuotTai
+TaiKhoan ||--o{ YeuCauDatMua
+ThuThu |o--o{ YeuCauDatMua
+TaiLieu |o--o{ YeuCauDatMua
+PhieuMuon ||--o| EmailNhacHan
+@enduml

@@ -1,0 +1,63 @@
+@startuml AD01_TraCuu_TaiSach
+title Activity – Tra cứu, đọc trực tuyến và tải sách điện tử\n(UC-TC-01..04, UC-XT-01)
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam SwimlaneTitleFontStyle bold
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam StateBackgroundColor #F3F6FA
+skinparam ClassBackgroundColor #F3F6FA
+|Độc giả|
+start
+:Mở chức năng Tra cứu tài liệu;
+|Hệ thống|
+:Hiển thị form tiêu chí\n(từ khóa, tác giả, chủ đề, loại, năm XB, hình thức);
+|Độc giả|
+repeat
+  :Nhập / điều chỉnh tiêu chí và bấm Tìm kiếm;
+  |Hệ thống|
+  :Truy vấn danh mục theo tiêu chí;
+repeat while (Có kết quả?) is ([Không]) not ([Có])
+note right: [Không] -> báo "Không tìm thấy tài liệu phù hợp"\nvà giữ nguyên tiêu chí để người dùng sửa
+:Hiển thị danh sách kết quả (phân trang);
+|Độc giả|
+:Chọn một tài liệu;
+|Hệ thống|
+:Hiển thị chi tiết: tác giả, NXB, năm,\nhình thức, số lượng tồn (bản in);
+|Độc giả|
+switch (Chọn thao tác?)
+case ([Đọc trực tuyến])
+  :Bấm Đọc trực tuyến;
+  |Hệ thống|
+  if (Tài liệu có bản điện tử?) then ([Có])
+    :Mở trình xem trực tuyến\n(không yêu cầu mã thẻ);
+  else ([Không])
+    :Ẩn nút Đọc trực tuyến;
+  endif
+case ([Tải về])
+  |Độc giả|
+  :Nhập Mã thẻ thư viện;
+  |Hệ thống|
+  :Xác thực mã thẻ (UC-XT-01);
+  if (Thẻ tồn tại, Hoạt động, còn hạn?) then ([Hợp lệ])
+    if (Tệp cho phép tải?) then ([Có])
+      :Ghi LuotTai;
+      :Trả tệp cho người dùng;
+    else ([Không])
+      :Báo "Tài liệu chỉ đọc trực tuyến";
+    endif
+  else ([Không hợp lệ])
+    :Báo lý do: không tồn tại / khóa / hết hạn;
+  endif
+case ([Đăng ký mượn])
+  :Bấm Đăng ký mượn;
+  |Hệ thống|
+  :Chuyển sang luồng Đăng ký mượn (AD02);
+case ([Quay lại])
+endswitch
+|Độc giả|
+stop
+@enduml

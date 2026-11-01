@@ -1,0 +1,42 @@
+@startuml
+skinparam defaultFontName Arial
+skinparam defaultFontSize 15
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classAttributeIconSize 0
+skinparam ArrowColor #31556A
+skinparam classBackgroundColor #EEF5FA
+skinparam usecaseBackgroundColor #EEF5FA
+skinparam activityBackgroundColor #EEF5FA
+skinparam noteBackgroundColor #FFF6D9
+hide empty members
+title Câu 3b • Use Case tổng quát: công và tài chính
+left to right direction
+actor "Trưởng phòng" as TP
+actor "Ban chấm công" as CC
+actor "Nhân sự" as NS
+actor "Giám đốc" as GD
+actor "Thủ quỹ" as TQ
+actor "Kế toán lương" as KT
+actor "Nhân viên" as NV
+rectangle "HỆ THỐNG NHÂN SỰ ĐÔNG Á / CÔNG VÀ TÀI CHÍNH" {
+ usecase "Lập kế hoạch tuần\nvà phân ca" as A
+ usecase "Chấm công" as B
+ usecase "Ghi nhận phụ trội" as C
+ usecase "Lập quyết định\nthưởng / kỷ luật" as D
+ usecase "Ký quyết định" as E
+ usecase "Lập phiếu thu / chi" as F
+ usecase "Lập bảng lương tháng" as G
+ usecase "Tra cứu / xuất bảng lương" as H
+}
+TP -- A
+CC -- B
+CC -- C
+NS -- D
+GD -- E
+TQ -- F
+KT -- G
+KT -- H
+NV -- H
+
+@enduml

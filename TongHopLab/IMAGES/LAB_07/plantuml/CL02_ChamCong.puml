@@ -1,0 +1,62 @@
+@startuml
+skinparam defaultFontName Arial
+skinparam defaultFontSize 15
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classAttributeIconSize 0
+skinparam ArrowColor #31556A
+skinparam classBackgroundColor #EEF5FA
+skinparam usecaseBackgroundColor #EEF5FA
+skinparam activityBackgroundColor #EEF5FA
+skinparam noteBackgroundColor #FFF6D9
+hide empty members
+title Câu 2b • Kế hoạch tuần, chấm công và phụ trội
+class PhongBan
+class NhanVien
+class KeHoachTuan {
++MaKH: String <<ID>>
++DauTuan: Date
++NguoiLap: String
++lapKeHoach()
+}
+class PhanCong {
++MaPC: String <<ID>>
++NgayLam: Date
++GioPTDuKien: Decimal
++phanCa()
+}
+class CaLam {
++MaCa: String <<ID>>
++TenCa: String
++GioBatDau: int
++SoGio: Decimal
+}
+class ChamCong {
++MaCC: String <<ID>>
++GioLam: Decimal
++NguoiCham: String
++ghiNhan()
+}
+class PhieuPhuTroi {
++MaPT: String <<ID>>
++NgayPT: Date
++HinhThuc: String
++NguoiLap: String
++lapPhieu()
+}
+class CTPhuTroi {
++MaPT: String <<ID,FK>>
++MaNV: String <<ID,FK>>
++SoGio: Decimal
++kiemTraKeHoach()
+}
+PhongBan "1" -- "0..*" KeHoachTuan
+KeHoachTuan "1" *-- "0..*" PhanCong
+NhanVien "1" -- "0..*" PhanCong
+CaLam "1" -- "0..*" PhanCong
+PhanCong "1" *-- "0..1" ChamCong
+PhieuPhuTroi "1" *-- "1..*" CTPhuTroi
+NhanVien "1" -- "0..*" CTPhuTroi
+note bottom of CTPhuTroi : Giờ phụ trội thực tế ≤ kế hoạch.\nCả ba hình thức đều dùng hệ số 1,5 theo đề.
+
+@enduml

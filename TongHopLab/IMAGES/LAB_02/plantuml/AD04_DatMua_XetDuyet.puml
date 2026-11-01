@@ -1,0 +1,61 @@
+@startuml AD04_DatMua_XetDuyet
+title Activity – Đặt mua tài liệu điện tử và xét duyệt\n(UC-TK-02, UC-TK-03, UC-QT-02, UC-TK-04)
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam SwimlaneTitleFontStyle bold
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam StateBackgroundColor #F3F6FA
+skinparam ClassBackgroundColor #F3F6FA
+|Độc giả|
+start
+if (Đã đăng nhập?) then ([Chưa])
+  :Đăng nhập (UC-TK-02);
+  note right: chưa có tài khoản -> Đăng ký tài khoản\n(UC-TK-01 «extend»)
+else ([Rồi])
+endif
+:Mở FrmDatMua, nhập tên sách, tác giả,\nnăm XB (bắt buộc), NXB, lý do;
+:Bấm Gửi;
+|Hệ thống|
+if (Đủ trường bắt buộc?) then ([Không])
+  :Đánh dấu trường thiếu;
+  |Độc giả|
+  stop
+else ([Có])
+endif
+|Hệ thống|
+:Lưu YeuCauDatMua (Chờ duyệt);
+:Hiển thị mã yêu cầu;
+|Thủ thư|
+:Mở danh sách yêu cầu Chờ duyệt;
+:Chọn một yêu cầu, xem chi tiết\nvà số người cùng đề nghị;
+|Hệ thống|
+:Kiểm tra trùng với danh mục hiện có;
+|Thủ thư|
+switch (Quyết định?)
+case ([Chấp nhận])
+  :Bấm Lưu quyết định;
+  |Hệ thống|
+  :Cập nhật Chấp nhận, ghi người duyệt, thời điểm;
+case ([Từ chối])
+  |Thủ thư|
+  :Nhập lý do (bắt buộc),\ncó thể gắn liên kết tài liệu sẵn có;
+  |Hệ thống|
+  :Cập nhật Từ chối;
+case ([Để sau])
+  :Chọn Để lại xử lý sau;
+  |Hệ thống|
+  :Giữ trạng thái Chờ duyệt;
+endswitch
+|Hệ thống|
+if (Yêu cầu vừa được thủ thư khác xử lý?) then ([Có])
+  :Báo đã xử lý, làm mới danh sách;
+else ([Không])
+endif
+|Độc giả|
+:Xem kết quả xét duyệt (UC-TK-04);
+stop
+@enduml

@@ -1,0 +1,76 @@
+@startuml UC01_TongQuat
+skinparam defaultFontName Arial
+skinparam dpi 140
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActorBorderColor #1F4E79
+skinparam UsecaseBorderColor #1F4E79
+skinparam UsecaseBackgroundColor #F3F6FA
+skinparam PackageBorderColor #7F7F7F
+skinparam RectangleBorderColor #1F4E79
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam ParticipantBorderColor #1F4E79
+skinparam StateBackgroundColor #F3F6FA
+skinparam StateBorderColor #1F4E79
+skinparam ClassBackgroundColor #F3F6FA
+skinparam ClassBorderColor #1F4E79
+skinparam EntityBackgroundColor #F3F6FA
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam ActivityBorderColor #1F4E79
+skinparam NoteBackgroundColor #FFF8DC
+left to right direction
+title Biểu đồ use case tổng quát – Hệ thống quản lý công ty du lịch Văn Hóa Việt
+actor "Khách hàng" as KH
+actor "Khách theo đoàn" as KD
+actor "Khách lẻ" as KL
+actor "Nhân viên\nkinh doanh" as NVKD
+actor "Nhân viên\nđiều hành tour" as NVDH
+actor "Nhân viên\nhướng dẫn" as HDV
+actor "Kế toán" as KT
+actor "Website\ncông ty" <<Hệ thống ngoài>> as WEB
+actor "Công ty\nbảo hiểm" <<Hệ thống ngoài>> as BH
+actor "Hệ thống Email" <<Hệ thống ngoài>> as MAIL
+KH <|-- KD
+KH <|-- KL
+
+rectangle "Hệ thống quản lý công ty du lịch" {
+  package "Thông tin tour" {
+    usecase "UC01 Xem thông tin tour" as UC01
+    usecase "UC02 Quản lý tour\n(nơi dừng chân, phương tiện,\nđiểm tham quan)" as UC02
+    usecase "UC03 Lập lịch\nchuyến đi" as UC03
+  }
+  package "Đăng ký du lịch" {
+    usecase "UC04 Lập phiếu đăng ký\ntheo đoàn" as UC04
+    usecase "UC05 Bán vé chuyến\ncho khách lẻ" as UC05
+    usecase "UC06 Quản lý khách hàng" as UC06
+  }
+  package "Thực hiện tour" {
+    usecase "UC07 Phân công nhân viên\nhướng dẫn" as UC07
+    usecase "UC08 Cập nhật tình trạng\ntour (đi / kết thúc / hủy)" as UC08
+    usecase "UC09 Xem lịch\nphân công" as UC09
+    usecase "UC10 Gửi và ghi nhận\nphiếu khảo sát" as UC10
+  }
+  package "Tài chính" {
+    usecase "UC11 Thanh toán\nkinh phí đoàn" as UC11
+    usecase "UC12 Tính lương\nnhân viên" as UC12
+  }
+}
+KH --> UC01
+KD --> UC11
+UC04 <-- NVKD
+UC05 <-- NVKD
+UC06 <-- NVKD
+UC10 <-- NVKD
+UC02 <-- NVDH
+UC03 <-- NVDH
+UC07 <-- NVDH
+UC08 <-- NVDH
+UC09 <-- HDV
+UC08 <-- HDV
+UC11 <-- KT
+UC12 <-- KT
+UC01 --> WEB
+UC04 --> BH
+UC10 --> MAIL
+@enduml

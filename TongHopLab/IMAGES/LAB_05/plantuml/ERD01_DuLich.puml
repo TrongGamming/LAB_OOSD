@@ -1,0 +1,183 @@
+@startuml ERD01_DuLich
+skinparam defaultFontName Arial
+skinparam dpi 140
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActorBorderColor #1F4E79
+skinparam UsecaseBorderColor #1F4E79
+skinparam UsecaseBackgroundColor #F3F6FA
+skinparam PackageBorderColor #7F7F7F
+skinparam RectangleBorderColor #1F4E79
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam ParticipantBorderColor #1F4E79
+skinparam StateBackgroundColor #F3F6FA
+skinparam StateBorderColor #1F4E79
+skinparam ClassBackgroundColor #F3F6FA
+skinparam ClassBorderColor #1F4E79
+skinparam EntityBackgroundColor #F3F6FA
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam ActivityBorderColor #1F4E79
+skinparam NoteBackgroundColor #FFF8DC
+hide circle
+skinparam linetype ortho
+title Sơ đồ thực thể – liên kết (ERD) – CSDL Oracle DULICH
+entity PhuongTien {
+  * MaPT : VARCHAR2(10) <<PK>>
+  --
+  * TenPT : NVARCHAR2(50)
+}
+entity DiaDanh {
+  * MaDiaDanh : VARCHAR2(10) <<PK>>
+  --
+  * TenDiaDanh : NVARCHAR2(100)
+}
+entity Tour {
+  * MaTour : VARCHAR2(10) <<PK>>
+  --
+  * TenTour : NVARCHAR2(200)
+  * SoNgay : NUMBER(2)
+  * SoDem : NUMBER(2)
+  * DonGia : NUMBER(12)
+  * MaPTVe : VARCHAR2(10) <<FK>>
+  MoTa : NVARCHAR2(1000)
+  * DangKinhDoanh : CHAR(1)
+}
+entity NoiDungChan {
+  * MaTour : VARCHAR2(10) <<PK,FK>>
+  * ThuTu : NUMBER(2) <<PK>>
+  --
+  * MaDiaDanh : VARCHAR2(10) <<FK>>
+  * MaPT : VARCHAR2(10) <<FK>>
+  * DoiPhuongTien : CHAR(1)
+  * CoNoiAn : CHAR(1)
+  * CoKhachSan : CHAR(1)
+  LoaiKhachSan : NUMBER(1)
+}
+entity DiemThamQuan {
+  * MaDTQ : VARCHAR2(10) <<PK>>
+  --
+  * TenDTQ : NVARCHAR2(150)
+  * DiaDiem : NVARCHAR2(200)
+  NoiDung : NVARCHAR2(1000)
+  YNghia : NVARCHAR2(1000)
+}
+entity Tour_DiemThamQuan {
+  * MaTour : VARCHAR2(10) <<PK,FK>>
+  * MaDTQ : VARCHAR2(10) <<PK,FK>>
+}
+entity KhachDoan {
+  * MaKD : VARCHAR2(10) <<PK>>
+  --
+  * TenCoQuan : NVARCHAR2(200)
+  * DiaChi : NVARCHAR2(300)
+  * DienThoai : VARCHAR2(15)
+  * NguoiDaiDien : NVARCHAR2(100)
+  Email : VARCHAR2(100)
+}
+entity PhieuDangKyDoan {
+  * SoPhieu : VARCHAR2(12) <<PK>>
+  --
+  * MaKD : VARCHAR2(10) <<FK>>
+  * MaTour : VARCHAR2(10) <<FK>>
+  * NgayLap, NgayDi, NgayVe : DATE
+  * SoNguoi : NUMBER(4)
+  * DiaDiemDon : NVARCHAR2(300)
+  * CoBaoHiem : CHAR(1)
+  * TongKinhPhi, TienCoc : NUMBER(14)
+  * TrangThai : NVARCHAR2(20)
+  NgayThanhToan : DATE
+}
+entity NguoiDiCung {
+  * SoPhieu : VARCHAR2(12) <<PK,FK>>
+  * STT : NUMBER(4) <<PK>>
+  --
+  * HoTen : NVARCHAR2(100)
+  * NgaySinh : DATE
+  SoGiayTo : VARCHAR2(20)
+}
+entity ChuyenDi {
+  * MaChuyen : VARCHAR2(12) <<PK>>
+  --
+  * MaTour : VARCHAR2(10) <<FK>>
+  * NgayDi, NgayVe : DATE
+  * SoChoToiDa : NUMBER(3)
+  * TrangThai : NVARCHAR2(20)
+}
+entity KhachLe {
+  * MaKL : VARCHAR2(10) <<PK>>
+  --
+  * HoTen : NVARCHAR2(100)
+  * SoGiayTo : VARCHAR2(20) <<UQ>>
+  * DienThoai : VARCHAR2(15)
+  DiaChi : NVARCHAR2(300)
+}
+entity DiemBanVe {
+  * MaDiemBan : VARCHAR2(10) <<PK>>
+  --
+  * TenDiemBan, DiaChi
+}
+entity DiemDon {
+  * MaDiemDon : VARCHAR2(10) <<PK>>
+  --
+  * TenDiemDon, DiaChi
+}
+entity VeChuyen {
+  * SoVe : VARCHAR2(12) <<PK>>
+  --
+  * MaChuyen : VARCHAR2(12) <<FK>>
+  * MaKL : VARCHAR2(10) <<FK>>
+  * MaDiemBan : VARCHAR2(10) <<FK>>
+  * MaDiemDon : VARCHAR2(10) <<FK>>
+  * SoNguoi : NUMBER(2)
+  * DonGia : NUMBER(12)
+  * ThanhTien : NUMBER(14)
+  * NgayMua : DATE
+  * TrangThai : NVARCHAR2(20)
+}
+entity NhanVien {
+  * MaNV : VARCHAR2(10) <<PK>>
+  --
+  * HoTen : NVARCHAR2(100)
+  * DienThoai : VARCHAR2(15)
+  * LuongCanBan : NUMBER(12)
+  * DangLamViec : CHAR(1)
+}
+entity PhanCong {
+  * MaPhanCong : NUMBER <<PK>>
+  --
+  * MaNV : VARCHAR2(10) <<FK>>
+  SoPhieu : VARCHAR2(12) <<FK>>
+  MaChuyen : VARCHAR2(12) <<FK,UQ>>
+  * NgayBatDau, NgayKetThuc : DATE
+  * LuongTour : NUMBER(12)
+}
+entity PhieuKhaoSat {
+  * MaKhaoSat : NUMBER <<PK>>
+  --
+  SoPhieu : VARCHAR2(12) <<FK,UQ>>
+  SoVe : VARCHAR2(12) <<FK,UQ>>
+  * NgayGui : DATE
+  MucHaiLong : NUMBER(1)
+  GopY : NVARCHAR2(1000)
+}
+PhuongTien ||--o{ Tour
+Tour ||--|{ NoiDungChan
+DiaDanh ||--o{ NoiDungChan
+PhuongTien ||--o{ NoiDungChan
+Tour ||--o{ Tour_DiemThamQuan
+DiemThamQuan ||--o{ Tour_DiemThamQuan
+KhachDoan ||--o{ PhieuDangKyDoan
+Tour ||--o{ PhieuDangKyDoan
+PhieuDangKyDoan ||--o{ NguoiDiCung
+Tour ||--o{ ChuyenDi
+ChuyenDi ||--o{ VeChuyen
+KhachLe ||--o{ VeChuyen
+DiemBanVe ||--o{ VeChuyen
+DiemDon ||--o{ VeChuyen
+NhanVien ||--o{ PhanCong
+PhieuDangKyDoan |o--o{ PhanCong
+ChuyenDi |o--o| PhanCong
+PhieuDangKyDoan |o--o| PhieuKhaoSat
+VeChuyen |o--o| PhieuKhaoSat
+@enduml

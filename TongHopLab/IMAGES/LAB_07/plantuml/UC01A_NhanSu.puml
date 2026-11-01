@@ -1,0 +1,40 @@
+@startuml
+skinparam defaultFontName Arial
+skinparam defaultFontSize 15
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classAttributeIconSize 0
+skinparam ArrowColor #31556A
+skinparam classBackgroundColor #EEF5FA
+skinparam usecaseBackgroundColor #EEF5FA
+skinparam activityBackgroundColor #EEF5FA
+skinparam noteBackgroundColor #FFF6D9
+hide empty members
+title Câu 3a • Use Case tổng quát: nhân sự
+left to right direction
+actor "Nhân viên" as NV
+actor "Nhân sự" as NS
+actor "Trưởng phòng" as TP
+actor "Giám đốc" as GD
+rectangle "HỆ THỐNG NHÂN SỰ ĐÔNG Á / NHÂN SỰ" {
+ usecase "Quản lý hồ sơ nhân viên" as A
+ usecase "Lập quyết định tuyển dụng" as B
+ usecase "Đánh giá thử việc" as C
+ usecase "Ký hợp đồng chính thức" as D
+ usecase "Lập hồ sơ BHXH, BHYT" as E
+ usecase "Quyết định lương / chức vụ" as F
+ usecase "Quản lý phòng ban,\nchức vụ, ca làm" as G
+}
+NV -- A
+NV -- D
+NS -- A
+NS -- B
+NS -- D
+NS -- E
+NS -- F
+NS -- G
+TP -- C
+GD -- D
+E ..> D : <<extend>>\n[dài hạn]
+
+@enduml

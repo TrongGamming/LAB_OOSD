@@ -1,0 +1,45 @@
+@startuml SD05_TraSach
+title Sequence – Ghi nhận trả sách (UC-MT-03)
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam SwimlaneTitleFontStyle bold
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam StateBackgroundColor #F3F6FA
+skinparam ClassBackgroundColor #F3F6FA
+autonumber
+actor "Thủ thư" as TT
+boundary "FrmMuonTra\n(tab Trả sách)" as F
+control MuonTraService as S
+database "Oracle – THUVIENSO" as DB
+TT -> F : quét mã bản sao
+activate F
+F -> S : TimPhieuDangMo(maBanSao)
+activate S
+S -> DB : SELECT ... FROM vw_TinhTrangMuon WHERE MaBanSao = :Ma
+DB --> S : phiếu đang mở (hoặc rỗng)
+S --> F : PhieuMuonInfo / null
+deactivate S
+alt không có phiếu mở
+  F --> TT : "Bản sao không nằm trong danh sách đang cho mượn"
+else có phiếu
+  F --> TT : hiển thị phiếu; tô đậm nếu quá hạn
+  TT -> F : chọn tình trạng (Nguyên vẹn/Hư hỏng/Mất),\nnhập ghi chú, bấm "Xác nhận trả"
+  F -> F : kiểm tra ghi chú bắt buộc khi Hư hỏng/Mất
+  F -> S : GhiNhanTra(maBanSao, maThuThu, tinhTrang, ghiChu)
+  activate S
+  S -> DB : sp_GhiNhanTraSach(:MaBanSao, :MaThuThu, :TinhTrang, :GhiChu)
+  activate DB
+  DB -> DB : SELECT ... FOR UPDATE; UPDATE PhieuMuon\n(NgayTra, SoNgayTre, TrangThai)
+  DB -> DB : UPDATE BanSao\n(SanSang | CanKiemTra | Mat); COMMIT
+  DB --> S : MaPhieuMuon, SoNgayTre, ConDangGiu
+  deactivate DB
+  S --> F : Ok(KetQuaTra)
+  deactivate S
+  F --> TT : "Trả thành công – độc giả còn giữ n cuốn"
+end
+deactivate F
+@enduml

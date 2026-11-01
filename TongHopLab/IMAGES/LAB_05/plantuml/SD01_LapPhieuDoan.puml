@@ -1,0 +1,72 @@
+@startuml SD01_LapPhieuDoan
+skinparam defaultFontName Arial
+skinparam dpi 140
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActorBorderColor #1F4E79
+skinparam UsecaseBorderColor #1F4E79
+skinparam UsecaseBackgroundColor #F3F6FA
+skinparam PackageBorderColor #7F7F7F
+skinparam RectangleBorderColor #1F4E79
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam ParticipantBorderColor #1F4E79
+skinparam StateBackgroundColor #F3F6FA
+skinparam StateBorderColor #1F4E79
+skinparam ClassBackgroundColor #F3F6FA
+skinparam ClassBorderColor #1F4E79
+skinparam EntityBackgroundColor #F3F6FA
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam ActivityBorderColor #1F4E79
+skinparam NoteBackgroundColor #FFF8DC
+autonumber
+title Biểu đồ tuần tự – Lập phiếu đăng ký tour theo đoàn
+actor "Nhân viên\nkinh doanh" as NV
+boundary "FrmPhieuDoan" as F
+control "PhieuDoanService" as S
+entity "KhachDoan" as KD
+entity "Tour" as T
+entity "PhieuDangKyDoan" as P
+entity "NguoiDiCung" as N
+database "Oracle\n(DULICH)" as DB
+NV -> F : Mở form lập phiếu
+F -> S : LayDanhSachTour(), LayKhachDoan()
+S -> DB : SELECT Tour, KhachDoan
+DB --> F : danh sách tour, khách đoàn
+NV -> F : Chọn khách đoàn (hoặc nhập khách mới),\nchọn tour, ngày đi, số người, địa điểm đón
+F -> S : TinhKinhPhi(maTour, soNguoi)
+S -> T : donGia x soNguoi
+T --> F : tổng kinh phí, tiền cọc gợi ý 30%
+opt Đoàn mua bảo hiểm
+  NV -> F : Nhập danh sách người đi cùng
+end
+NV -> F : Nhấn "Lập phiếu"
+F -> F : Kiểm tra dữ liệu nhập
+alt soNguoi <= 12 hoặc ngày đi <= hôm nay hoặc tiền cọc không hợp lệ
+  F --> NV : Báo lỗi tại ô nhập
+else hợp lệ
+  F -> S : LapPhieu(phieu, khachMoi, dsNguoiDiCung)
+  S -> DB : BEGIN TRANSACTION
+  opt Khách đoàn mới
+    S -> KD : tạo khách đoàn (SEQ_KHACHDOAN)
+    KD -> DB : INSERT KhachDoan
+  end
+  S -> P : tạo phiếu (SEQ_PHIEU), trạng thái "Đã đặt cọc"
+  P -> DB : INSERT PhieuDangKyDoan
+  DB -> DB : TRG_Phieu_TinhToan:\nngày về, tổng kinh phí
+  loop từng người đi cùng
+    S -> N : tạo dòng danh sách
+    N -> DB : INSERT NguoiDiCung
+  end
+  alt Lỗi ràng buộc (CHECK / FK)
+    DB --> S : ORA-xxxxx
+    S -> DB : ROLLBACK
+    S --> F : KetQua(false, thông điệp)
+    F --> NV : Thông báo lỗi
+  else Thành công
+    S -> DB : COMMIT
+    S --> F : KetQua(true, soPhieu)
+    F --> NV : "Đã lập phiếu PDxxxxxx", nạp lại danh sách phiếu
+  end
+end
+@enduml

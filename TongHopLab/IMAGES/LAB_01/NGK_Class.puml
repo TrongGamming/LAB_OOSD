@@ -1,0 +1,153 @@
+@startuml
+skinparam dpi 180
+skinparam defaultFontName Arial
+skinparam classAttributeIconSize 0
+hide circle
+class NhanHieu {
+ maNhanHieu: String <<ID>>
+ tenNhanHieu: String
+ --
+ +themNhanHieu()
+ +capNhatNhanHieu()
+ +xoaNhanHieu()
+ +timNhanHieu()
+}
+class NuocGiaiKhat {
+ maNGK: String <<ID>>
+ tenNGK: String
+ donViTinh: String
+ donGia: Decimal
+ soLuongTon: Integer
+ --
+ +themNGK()
+ +capNhatNGK()
+ +xoaNGK()
+ +kiemTraTonKho()
+ +capNhatTonKho()
+}
+class NhaCungUng {
+ maNCC: String <<ID>>
+ tenNCC: String
+ diaChi: String
+ soDienThoai: String
+ --
+ +themNCC()
+ +capNhatNCC()
+ +xoaNCC()
+ +timNCC()
+}
+class NhanVien {
+ maNV: String <<ID>>
+ hoTen: String
+ soDienThoai: String
+ diaChi: String
+ --
+ +themNhanVien()
+ +capNhatNhanVien()
+ +xoaNhanVien()
+}
+class KhachHang {
+ maKH: String <<ID>>
+ hoTen: String
+ diaChi: String
+ soDienThoai: String
+ loaiKhach: String
+ --
+ +themKhachHang()
+ +capNhatKhachHang()
+ +xoaKhachHang()
+ +kiemTraKhachQuen()
+}
+class DonDatHang {
+ maDDH: String <<ID>>
+ ngayDat: Date
+ ngayNhanDuKien: Date
+ trangThai: String
+ --
+ +lapDonDatHang()
+ +capNhatDonDatHang()
+ +huyDonDatHang()
+ +kiemTraTrangThai()
+}
+class ChiTietDonDatHang {
+ maCTDDH: String <<ID>>
+ soLuongDat: Integer
+ donGiaNhap: Decimal
+ --
+ +tinhThanhTien()
+}
+class PhieuGiaoHang {
+ maPGH: String <<ID>>
+ ngayGiao: Date
+ soDonHang: String
+ tongTien: Decimal
+ lanGiao: Integer
+ --
+ +lapPhieuGiaoHang()
+ +tinhTongTien()
+ +capNhatTrangThaiGiaoHang()
+}
+class ChiTietPhieuGiaoHang {
+ maCTPGH: String <<ID>>
+ soLuongGiao: Integer
+ donGia: Decimal
+ --
+ +tinhThanhTien()
+}
+class HoaDon {
+ maHD: String <<ID>>
+ ngayLap: Date
+ tongTien: Decimal
+ trangThaiThanhToan: String
+ --
+ +lapHoaDon()
+ +tinhTongTien()
+ +thanhToan()
+ +capNhatTrangThai()
+}
+class ChiTietHoaDon {
+ maCTHD: String <<ID>>
+ soLuong: Integer
+ donGia: Decimal
+ thanhTien: Decimal
+ --
+ +tinhThanhTien()
+}
+class PhieuHen {
+ maPhieuHen: String <<ID>>
+ ngayLap: Date
+ ngayHenGiao: Date
+ trangThai: String
+ --
+ +lapPhieuHen()
+ +capNhatTrangThai()
+ +xacNhanGiaoHang()
+}
+class PhieuGhiNo {
+ maPGN: String <<ID>>
+ ngayLap: Date
+ soTienNo: Decimal
+ ngayDuKienTra: Date
+ lyDoNo: String
+ trangThai: String
+ --
+ +lapPhieuGhiNo()
+ +capNhatPhieuGhiNo()
+ +thanhToanNo()
+ +tinhSoTienConNo()
+}
+NhanHieu "1" -- "0..*" NuocGiaiKhat
+NhaCungUng "1" -- "0..*" NuocGiaiKhat
+NhaCungUng "1" -- "0..*" DonDatHang
+DonDatHang "1" *-- "1..*" ChiTietDonDatHang
+NuocGiaiKhat "1" -- "0..*" ChiTietDonDatHang
+DonDatHang "1" -- "0..3" PhieuGiaoHang
+PhieuGiaoHang "1" *-- "1..*" ChiTietPhieuGiaoHang
+KhachHang "1" -- "0..*" HoaDon
+HoaDon "1" *-- "1..*" ChiTietHoaDon
+NuocGiaiKhat "1" -- "0..*" ChiTietHoaDon
+HoaDon "1" -- "0..*" PhieuHen
+KhachHang "1" -- "0..*" PhieuGhiNo
+NhanVien "1" -- "0..*" HoaDon
+NhanVien "1" -- "0..*" PhieuGhiNo
+@enduml

@@ -1,0 +1,30 @@
+@startuml
+skinparam defaultFontName Arial
+skinparam defaultFontSize 15
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classAttributeIconSize 0
+skinparam ArrowColor #31556A
+skinparam classBackgroundColor #EEF5FA
+skinparam usecaseBackgroundColor #EEF5FA
+skinparam activityBackgroundColor #EEF5FA
+skinparam noteBackgroundColor #FFF6D9
+hide empty members
+title Câu 5a • Tiếp nhận và đánh giá thử việc
+start
+:Nhân sự: nhận thông tin người trúng tuyển;\nKiểm tra hồ sơ, CCCD và phòng ban;
+:Giám đốc: ký quyết định tuyển dụng;\nGhi thời gian, lương thử việc và điều khoản;
+:Nhân sự: lưu nhân viên và quyết định;\nChuyển trạng thái THU_VIEC;
+:Trưởng phòng: phân ca, theo dõi công việc;
+:Hết thời gian thử việc: trưởng phòng đánh giá;
+if (Đạt thử việc?) then (Không)
+ :Nhân sự: ghi KHONG_DAT;\nChuyển NGHI_VIEC;
+ stop
+else (Có)
+ :Nhân sự: ghi DAT;
+ :«callBehavior» Ký hợp đồng chính thức;\nChi tiết tại Hình hoạt động 5b;
+ :Nhân sự: bàn giao hợp đồng và quyết định;
+ stop
+endif
+
+@enduml

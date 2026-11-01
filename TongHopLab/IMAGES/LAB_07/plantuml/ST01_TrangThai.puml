@@ -1,0 +1,26 @@
+@startuml
+skinparam defaultFontName Arial
+skinparam defaultFontSize 15
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classAttributeIconSize 0
+skinparam ArrowColor #31556A
+skinparam classBackgroundColor #EEF5FA
+skinparam usecaseBackgroundColor #EEF5FA
+skinparam activityBackgroundColor #EEF5FA
+skinparam noteBackgroundColor #FFF6D9
+hide empty members
+title Trạng thái nhân viên và quyết định thưởng/phạt
+state "Nhân viên" as NV {
+ [*] --> THU_VIEC : quyết định tuyển dụng
+ THU_VIEC --> NGHI_VIEC : thử việc không đạt
+ THU_VIEC --> CHINH_THUC : đạt + ký hợp đồng
+}
+state "Quyết định thưởng / phạt" as QD {
+ [*] --> DU_THAO : lập quyết định
+ DU_THAO --> DA_KY : giám đốc ký + phân bổ
+ DA_KY --> DA_KY : xem lại (không ký lại)
+}
+note right of QD : Tình trạng chi trả suy từ phiếu thu/chi\nhoặc MaBL ở PhanBoQD, không lưu trạng thái kép.
+
+@enduml

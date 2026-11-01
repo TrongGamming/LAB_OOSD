@@ -1,0 +1,49 @@
+@startuml SD04_LapPhieuMuon
+title Sequence – Lập phiếu mượn khi giao sách (UC-MT-02)
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam SwimlaneTitleFontStyle bold
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam StateBackgroundColor #F3F6FA
+skinparam ClassBackgroundColor #F3F6FA
+autonumber
+actor "Thủ thư" as TT
+boundary FrmMuonTra as F
+control MuonTraService as S
+database "Oracle – THUVIENSO" as DB
+TT -> F : nhập mã thẻ, bấm Kiểm tra
+activate F
+F -> S : LayThongTinMuon(maThe)
+activate S
+S -> DB : sp_XacThucMaThe;\nSELECT đăng ký ChoNhan, số đang mượn, số quá hạn
+DB --> S : thông tin độc giả + danh sách đăng ký
+S --> F : ThongTinMuon
+deactivate S
+F --> TT : hiển thị độc giả, đăng ký chờ nhận
+loop với mỗi cuốn giao cho độc giả
+  TT -> F : quét mã bản sao (hoặc chọn đăng ký)
+  F -> F : thêm vào dgvBanSaoChon,\nchặn trùng mã
+end
+TT -> F : bấm "Lập phiếu mượn"
+loop với mỗi dòng trong dgvBanSaoChon
+  F -> S : LapPhieuMuon(maThe, maBanSao, maThuThu, dangKyId)
+  activate S
+  S -> DB : sp_LapPhieuMuon(:MaThe, :MaBanSao, :MaThuThu, :DangKyId)
+  alt bản sao/đăng ký không hợp lệ
+    DB --> S : RAISE_APPLICATION_ERROR -2003x (đã ROLLBACK)
+    S --> F : Loi(thông điệp)
+    F -> F : tô đỏ dòng lỗi
+  else hợp lệ
+    DB --> S : MaPhieuMuon, NgayMuon, HanTra
+    S --> F : Ok(PhieuMuon)
+    F -> F : đánh dấu dòng thành công
+  end
+  deactivate S
+end
+F --> TT : tổng kết phiếu đã lập, cho In phiếu
+deactivate F
+@enduml

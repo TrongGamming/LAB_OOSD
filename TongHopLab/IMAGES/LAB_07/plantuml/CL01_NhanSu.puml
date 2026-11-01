@@ -1,0 +1,88 @@
+@startuml
+skinparam defaultFontName Arial
+skinparam defaultFontSize 15
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classAttributeIconSize 0
+skinparam ArrowColor #31556A
+skinparam classBackgroundColor #EEF5FA
+skinparam usecaseBackgroundColor #EEF5FA
+skinparam activityBackgroundColor #EEF5FA
+skinparam noteBackgroundColor #FFF6D9
+hide empty members
+title Câu 2a • Nhân sự, hợp đồng và quyết định
+left to right direction
+class PhongBan {
++MaPB: String <<ID>>
++TenPB: String
++capNhat()
+}
+class NhanVien {
++MaNV: String <<ID>>
++HoTen: String
++CCCD: String
++NgaySinh: Date
++TrangThai: String
++traCuu()
+}
+abstract class QuyetDinh {
++MaQD: String <<ID>>
++NgayKy: Date
++NguoiKy: String
++banHanh()
+}
+class QDTuyenDung {
++TuNgay: Date
++DenNgay: Date
++LuongThuViec: Decimal
++DieuKhoan: String
++KetQua: String
++danhGia()
+}
+class QDLuong {
++HieuLuc: Date
++LuongCB: Decimal
++PCLuong: Decimal
++PCDocHai: Decimal
++tangLuong()
+}
+class QDChucVu {
++HieuLuc: Date
++PhuCap: Decimal
++boNhiem()
+}
+class ChucVu {
++MaCV: String <<ID>>
++TenCV: String
+}
+class HopDong {
++MaHD: String <<ID>>
++NgayKy: Date
++TuNgay: Date
++DenNgay: Date?
++LoaiHD: String
++ky()
+}
+class HoSoBaoHiem {
++MaBH: String <<ID>>
++SoBHXH: String
++SoBHYT: String
++TyLeXH: Decimal
++TyLeYT: Decimal
++lapHoSo()
+}
+QuyetDinh <|-- QDTuyenDung
+QuyetDinh <|-- QDLuong
+QuyetDinh <|-- QDChucVu
+PhongBan "1" -- "0..*" NhanVien : quản lý
+PhongBan "1" -- "0..*" QDTuyenDung : tiếp nhận thử việc
+NhanVien "1" -- "1" QDTuyenDung
+NhanVien "1" -- "0..*" HopDong
+NhanVien "1" -- "0..*" QDLuong
+NhanVien "1" -- "0..*" QDChucVu
+ChucVu "1" -- "0..*" QDChucVu
+HopDong "1" *-- "0..1" HoSoBaoHiem
+note bottom of HoSoBaoHiem : Hợp đồng dài hạn: đúng 1 hồ sơ BH.\nNgắn hạn: không bắt buộc trong đề.
+note top of QuyetDinh : Lớp trừu tượng ở mô hình phân tích.\nMaQD được thừa kế; SQL lưu ở bảng từng loại.
+
+@enduml

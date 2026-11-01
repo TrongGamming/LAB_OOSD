@@ -1,0 +1,74 @@
+@startuml
+skinparam defaultFontName Arial
+skinparam defaultFontSize 15
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classAttributeIconSize 0
+skinparam ArrowColor #31556A
+skinparam classBackgroundColor #EEF5FA
+skinparam usecaseBackgroundColor #EEF5FA
+skinparam activityBackgroundColor #EEF5FA
+skinparam noteBackgroundColor #FFF6D9
+hide empty members
+title Câu 2c • Thưởng, kỷ luật, thu chi và lương
+class QuyetDinhKTKL {
++MaQD: String <<ID>>
++LoaiQD: String
++LyDo: String
++CachXuLy: String
++TrangThai: String
++NguoiKy: String
++lapDuThao()
++ky()
+}
+class DoiTuongQD {
++MaDT: String <<ID>>
++SoTien: Decimal
++chonCaNhanHoacTapThe()
+}
+class PhanBoQD {
++MaPBQD: String <<ID>>
++SoTien: Decimal
++chotNguoiNhan()
+}
+class PhieuThuChi {
++MaPhieu: String <<ID>>
++LoaiPhieu: String
++NgayLap: Date
++SoTien: Decimal
++xacNhanThuChi()
+}
+class BangLuong {
++MaBL: String <<ID>>
++Thang: Date
++CongChuan: int
++lapVaKhoa()
+}
+class CTLuong {
++MaBL: String <<ID,FK>>
++MaNV: String <<ID,FK>>
++LuongCong: Decimal
++TienPT: Decimal
++TienThuong: Decimal
++TienPhat: Decimal
++BHXH: Decimal
++BHYT: Decimal
++ThucLinh: Decimal
++tinhLuong()
+}
+class NhanVien
+class PhongBan
+QuyetDinhKTKL "1" *-- "1..*" DoiTuongQD
+DoiTuongQD "1" *-- "0..*" PhanBoQD
+NhanVien "0..1" -- "0..*" DoiTuongQD : cá nhân
+PhongBan "0..1" -- "0..*" DoiTuongQD : tập thể
+NhanVien "1" -- "0..*" PhanBoQD : người nhận
+PhanBoQD "1" -- "0..1" PhieuThuChi : trực tiếp
+BangLuong "1" *-- "1..*" CTLuong
+NhanVien "1" -- "0..*" CTLuong
+CTLuong "0..1" -- "0..*" PhanBoQD : qua lương
+note top of DoiTuongQD : {xor} Chọn cá nhân HOẶC phòng ban.\nTổng tiền tập thể được chia khi ký.
+note bottom of PhanBoQD : {xor} Thu/chi trực tiếp HOẶC qua lương.\nPhân bổ đã gắn kỳ lương không tính lại.
+note top of QuyetDinhKTKL : LoaiQD = KHEN_THUONG hoặc KY_LUAT.\nDùng một cấu trúc vì cùng quy trình ký/phân bổ.
+
+@enduml

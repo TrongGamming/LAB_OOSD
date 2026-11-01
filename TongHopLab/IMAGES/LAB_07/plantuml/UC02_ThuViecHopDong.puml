@@ -1,0 +1,46 @@
+@startuml
+skinparam defaultFontName Arial
+skinparam defaultFontSize 15
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classAttributeIconSize 0
+skinparam ArrowColor #31556A
+skinparam classBackgroundColor #EEF5FA
+skinparam usecaseBackgroundColor #EEF5FA
+skinparam activityBackgroundColor #EEF5FA
+skinparam noteBackgroundColor #FFF6D9
+hide empty members
+title Câu 4 • Phân rã tiếp nhận thử việc đến hợp đồng chính thức
+left to right direction
+actor "Nhân sự" as NS
+actor "Nhân viên" as NV
+actor "Trưởng phòng" as TP
+actor "Giám đốc" as GD
+rectangle "TUYỂN DỤNG VÀ CHÍNH THỨC HÓA" {
+ usecase "Tiếp nhận thử việc" as A
+ usecase "Ghi hồ sơ cá nhân" as B
+ usecase "Lập quyết định tuyển dụng\n(phòng, thời gian, lương, điều khoản)" as C
+ usecase "Theo dõi và đánh giá thử việc" as D
+ usecase "Ký hợp đồng chính thức" as E
+ usecase "Kiểm tra thử việc đạt" as F
+ usecase "Chọn dài hạn / ngắn hạn\nvà ghi điều khoản" as G
+ usecase "Lập quyết định lương" as H
+ usecase "Lập quyết định chức vụ" as I
+ usecase "Lập hồ sơ BHXH, BHYT" as J
+}
+NS -- A
+NV -- A
+TP -- D
+NS -- E
+NV -- E
+GD -- E
+A ..> B : <<include>>
+A ..> C : <<include>>
+E ..> F : <<include>>
+E ..> G : <<include>>
+E ..> H : <<include>>
+I ..> E : <<extend>>\n[có bổ nhiệm]
+J ..> E : <<extend>>\n[hợp đồng dài hạn]
+note bottom of I : Triển khai mặc định chức vụ Nhân viên, phụ cấp 0.\nKhông đạt: kết thúc quy trình, không ký hợp đồng.
+
+@enduml

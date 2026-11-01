@@ -1,0 +1,36 @@
+@startuml ST01_PhieuDangKyDoan
+skinparam defaultFontName Arial
+skinparam dpi 140
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActorBorderColor #1F4E79
+skinparam UsecaseBorderColor #1F4E79
+skinparam UsecaseBackgroundColor #F3F6FA
+skinparam PackageBorderColor #7F7F7F
+skinparam RectangleBorderColor #1F4E79
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam ParticipantBorderColor #1F4E79
+skinparam StateBackgroundColor #F3F6FA
+skinparam StateBorderColor #1F4E79
+skinparam ClassBackgroundColor #F3F6FA
+skinparam ClassBorderColor #1F4E79
+skinparam EntityBackgroundColor #F3F6FA
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam ActivityBorderColor #1F4E79
+skinparam NoteBackgroundColor #FFF8DC
+title Biểu đồ trạng thái – Phiếu đăng ký theo đoàn
+[*] --> DaDatCoc : lập phiếu [số người > 12]\n/ thu tiền cọc
+state "Đã đặt cọc" as DaDatCoc
+state "Đang đi" as DangDi
+state "Chờ thanh toán" as ChoTT
+state "Đã thanh toán" as DaTT
+state "Hủy - mất cọc" as Huy
+DaDatCoc --> DaDatCoc : phân công HDV /\nnhập người đi cùng
+DaDatCoc --> DangDi : bắt đầu tour\n[đã phân công HDV và\nđủ danh sách nếu có bảo hiểm]
+DaDatCoc --> Huy : đoàn không đi\n/ giữ tiền cọc
+DangDi --> ChoTT : kết thúc tour\n/ gửi phiếu khảo sát
+ChoTT --> DaTT : thanh toán kinh phí\n/ ghi ngày thanh toán
+DaTT --> [*]
+Huy --> [*]
+@enduml

@@ -1,0 +1,64 @@
+@startuml AD06_DangKy_DangNhap
+title Activity – Đăng ký tài khoản và đăng nhập (UC-TK-01, UC-TK-02)
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam SwimlaneTitleFontStyle bold
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam StateBackgroundColor #F3F6FA
+skinparam ClassBackgroundColor #F3F6FA
+|Người dùng|
+start
+:Mở ứng dụng;
+|Hệ thống|
+:Hiển thị FrmDangNhap;
+|Người dùng|
+if (Đã có tài khoản?) then ([Chưa])
+  :Bấm Đăng ký;
+  :Nhập mã thẻ, email, tên đăng nhập, mật khẩu;
+  |Hệ thống|
+  if (Mã thẻ hợp lệ và chưa gắn tài khoản?) then ([Không])
+    :Báo lỗi mã thẻ;
+    |Người dùng|
+    stop
+  else ([Có])
+  endif
+  |Hệ thống|
+  if (Tên đăng nhập trùng hoặc mật khẩu yếu?) then ([Có])
+    :Báo lỗi chi tiết;
+    |Người dùng|
+    stop
+  else ([Không])
+  endif
+  |Hệ thống|
+  :Sinh salt, băm SHA-256, lưu TaiKhoan (DocGia);
+  :Quay lại FrmDangNhap, điền sẵn tên đăng nhập;
+else ([Rồi])
+endif
+|Người dùng|
+:Nhập tên đăng nhập và mật khẩu;
+|Hệ thống|
+if (Tài khoản bị tạm khóa?) then ([Có])
+  :Báo liên hệ thủ thư;
+  |Người dùng|
+  stop
+else ([Không])
+endif
+|Hệ thống|
+if (Mật khẩu đúng?) then ([Đúng])
+  :Reset số lần sai, ghi lần đăng nhập cuối;
+  :Mở FrmMain theo vai trò (Độc giả / Thủ thư);
+else ([Sai])
+  :Tăng số lần sai;
+  if (Sai >= 5 lần liên tiếp?) then ([Có])
+    :Tạm khóa tài khoản;
+  else ([Không])
+    :Báo sai thông tin đăng nhập;
+  endif
+endif
+|Người dùng|
+stop
+@enduml

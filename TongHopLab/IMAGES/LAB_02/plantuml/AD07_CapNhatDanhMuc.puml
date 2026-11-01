@@ -1,0 +1,55 @@
+@startuml AD07_CapNhatDanhMuc
+title Activity – Cập nhật danh mục tài liệu (UC-QT-01)
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam SwimlaneTitleFontStyle bold
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam StateBackgroundColor #F3F6FA
+skinparam ClassBackgroundColor #F3F6FA
+|Thủ thư|
+start
+:Mở FrmTaiLieu;
+|Hệ thống|
+:Nạp danh sách tài liệu, chủ đề, NXB, tác giả;
+|Thủ thư|
+switch (Thao tác?)
+case ([Thêm])
+  :Nhập thông tin tài liệu, chọn hình thức;
+  if (Có bản điện tử?) then ([Có])
+    :Chọn tệp, định dạng, quyền tải;
+  else ([Không])
+  endif
+  if (Có bản in?) then ([Có])
+    :Nhập số bản sao, vị trí kệ;
+  else ([Không])
+  endif
+  |Hệ thống|
+  if (Mã trùng / thiếu trường bắt buộc?) then ([Có])
+    :Báo lỗi, giữ dữ liệu đã nhập;
+  else ([Không])
+    :Lưu TaiLieu, TaiLieu_TacGia,\nTepDienTu, BanSao trong 1 transaction;
+  endif
+case ([Sửa])
+  |Thủ thư|
+  :Chọn dòng, sửa (mã khóa ReadOnly);
+  |Hệ thống|
+  :Cập nhật, ghi NgayCapNhat;
+case ([Xóa])
+  |Thủ thư|
+  :Chọn dòng, xác nhận xóa;
+  |Hệ thống|
+  if (Còn bản sao Đang mượn / Đang giữ\nhoặc đang được tham chiếu?) then ([Có])
+    :Từ chối, báo "Tài liệu đang được sử dụng";
+  else ([Không])
+    :Xóa tài liệu và dữ liệu phụ thuộc;
+  endif
+endswitch
+|Hệ thống|
+:Làm mới DataGridView;
+|Thủ thư|
+stop
+@enduml

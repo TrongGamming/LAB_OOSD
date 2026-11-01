@@ -1,0 +1,40 @@
+@startuml SD01_DangNhap
+title Sequence – Đăng nhập (UC-TK-02)
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam SwimlaneTitleFontStyle bold
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam StateBackgroundColor #F3F6FA
+skinparam ClassBackgroundColor #F3F6FA
+autonumber
+actor "Người dùng" as U
+boundary FrmDangNhap as F
+control TaiKhoanService as S
+database "Oracle – THUVIENSO" as DB
+U -> F : nhập tên đăng nhập, mật khẩu\nbấm Đăng nhập
+activate F
+F -> F : kiểm tra rỗng
+F -> S : DangNhap(ten, matKhau)
+activate S
+S -> DB : SELECT MaTaiKhoan, MatKhauHash, MatKhauSalt,\nVaiTro, TrangThai, SoLanSaiLienTiep\nFROM TaiKhoan WHERE TenDangNhap=@ten
+DB --> S : bản ghi tài khoản
+alt không tồn tại
+  S --> F : Loi("Sai thông tin đăng nhập")
+else TrangThai = TamKhoa
+  S --> F : Loi("Tài khoản tạm khóa")
+else hash(salt + matKhau) khớp
+  S -> DB : UPDATE TaiKhoan SET SoLanSaiLienTiep=0,\nLanDangNhapCuoi=SYSTIMESTAMP
+  S --> F : Ok(PhienDangNhap{MaTaiKhoan, VaiTro, HoTen})
+  F -> F : mở FrmMain(phien)
+else sai mật khẩu
+  S -> DB : UPDATE SoLanSaiLienTiep += 1;\nnếu >= 5 thì TrangThai = TamKhoa
+  S --> F : Loi("Sai thông tin đăng nhập")
+end
+deactivate S
+F --> U : hiển thị kết quả
+deactivate F
+@enduml

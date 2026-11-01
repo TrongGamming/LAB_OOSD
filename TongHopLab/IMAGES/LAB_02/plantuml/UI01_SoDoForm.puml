@@ -1,0 +1,48 @@
+@startuml UI01_SoDoForm
+title Sơ đồ hệ thống Form – QuanLyThuVienSo (WinForms)
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam SwimlaneTitleFontStyle bold
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam StateBackgroundColor #F3F6FA
+skinparam ClassBackgroundColor #F3F6FA
+skinparam rectangle {
+  BackgroundColor #F3F6FA
+  BorderColor #1F4E79
+}
+rectangle "FrmDangNhap" as DN
+rectangle "FrmDangKyTaiKhoan" as DK
+rectangle "FrmMain" as M
+rectangle "FrmTraCuu" as TC
+rectangle "FrmNhapMaThe" as MT
+rectangle "FrmDatMua" as DM
+rectangle "FrmDoiMatKhau" as MK
+package "Chỉ Thủ thư" {
+  rectangle "FrmDanhMuc" as DMC
+  rectangle "FrmTaiLieu" as TL
+  rectangle "FrmDocGia" as DG
+  rectangle "FrmMuonTra" as MTR
+  rectangle "FrmDuyetDatMua" as DD
+  rectangle "FrmBaoCao" as BC
+  rectangle "FrmNhatKyEmail" as EM
+}
+DN --> DK : Đăng ký
+DK --> DN : Hoàn tất
+DN --> M : Đăng nhập OK
+M --> TC
+M --> DM : vai trò Độc giả
+M --> MK
+M --> DMC
+M --> TL
+M --> DG
+M --> MTR
+M --> DD
+M --> BC
+M --> EM
+TC --> MT : Tải về / Đăng ký mượn
+M --> DN : Đăng xuất
+@enduml

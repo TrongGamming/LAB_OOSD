@@ -1,0 +1,104 @@
+@startuml
+skinparam dpi 180
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide circle
+entity PhieuDatPhong {
+ SoPhieuDat : VARCHAR2(30) <<ID>>
+ MaKhach : VARCHAR2(20)
+ MaNVLeTan : VARCHAR2(20)
+ NgayLap : DATE
+ NgayNhan : DATE
+ NgayTraDuKien : DATE
+ TienCoc : NUMBER(18,2)
+ KenhDat : NVARCHAR2(20)
+ TrangThai : NVARCHAR2(30)
+ NgayNhanThucTe : DATE
+ NgayTraThucTe : DATE
+}
+entity DichVu {
+ MaDV : VARCHAR2(20) <<ID>>
+ TenDV : NVARCHAR2(120)
+ DonViTinh : NVARCHAR2(40)
+ DonGia : NUMBER(18,2)
+}
+entity PhieuSuDungDV {
+ SoPhieuSDDV : VARCHAR2(30) <<ID>>
+ SoPhieuDat : VARCHAR2(30)
+ SoPhong : VARCHAR2(20)
+ NgaySuDung : DATE
+ MaNV : VARCHAR2(20)
+}
+entity ChiTietPhieuSuDungDV {
+ SoPhieuSDDV : VARCHAR2(30) <<ID>>
+ MaDV : VARCHAR2(20) <<ID>>
+ SoLuong : NUMBER(10)
+ DonGia : NUMBER(18,2)
+ ThanhTien : NUMBER(18,2)
+}
+entity QuyDinhDenBu {
+ MaQuyDinh : VARCHAR2(30) <<ID>>
+ MaLoaiTN : VARCHAR2(20)
+ MucDoThietHai : NVARCHAR2(80)
+ MucDenBu : NUMBER(18,2)
+}
+entity PhieuDenBu {
+ SoPhieuDenBu : VARCHAR2(30) <<ID>>
+ SoPhieuDat : VARCHAR2(30)
+ SoPhong : VARCHAR2(20)
+ NgayLap : DATE
+ MaNV : VARCHAR2(20)
+ TongTien : NUMBER(18,2)
+}
+entity ChiTietPhieuDenBu {
+ SoPhieuDenBu : VARCHAR2(30) <<ID>>
+ MaTienNghi : VARCHAR2(30) <<ID>>
+ MucDoThietHai : NVARCHAR2(80)
+ SoTien : NUMBER(18,2)
+}
+entity HoaDon {
+ SoHoaDon : VARCHAR2(30) <<ID>>
+ SoPhieuDat : VARCHAR2(30)
+ NgayLap : DATE
+ MaNV : VARCHAR2(20)
+ SoNgayTinhTien : NUMBER(10)
+ TienPhong : NUMBER(18,2)
+ TienDichVu : NUMBER(18,2)
+ TongTien : NUMBER(18,2)
+ TrangThai : NVARCHAR2(30)
+}
+entity ThanhToan {
+ MaThanhToan : VARCHAR2(30) <<ID>>
+ SoHoaDon : VARCHAR2(30)
+ NgayThanhToan : DATE
+ HinhThuc : NVARCHAR2(30)
+ SoTien : NUMBER(18,2)
+}
+entity TienNghi {
+ MaTienNghi : VARCHAR2(30) <<ID>>
+ MaLoaiTN : VARCHAR2(20)
+ SoThuTu : NUMBER(10)
+ TinhTrangHienTai : NVARCHAR2(100)
+}
+entity NhanVien {
+ MaNV : VARCHAR2(20) <<ID>>
+ HoTen : NVARCHAR2(120)
+ VaiTro : NVARCHAR2(50)
+ SoDienThoai : VARCHAR2(20)
+}
+NhanVien "1" -- "0..*" PhieuDatPhong : MaNVLeTan
+NhanVien "1" -- "0..*" PhieuSuDungDV : MaNV
+PhieuSuDungDV "1" -- "0..*" ChiTietPhieuSuDungDV : SoPhieuSDDV
+DichVu "1" -- "0..*" ChiTietPhieuSuDungDV : MaDV
+NhanVien "1" -- "0..*" PhieuDenBu : MaNV
+PhieuDenBu "1" -- "0..*" ChiTietPhieuDenBu : SoPhieuDenBu
+TienNghi "1" -- "0..*" ChiTietPhieuDenBu : MaTienNghi
+PhieuDatPhong "1" -- "0..1" HoaDon : SoPhieuDat
+NhanVien "1" -- "0..*" HoaDon : MaNV
+HoaDon "1" -- "0..*" ThanhToan : SoHoaDon
+
+@enduml

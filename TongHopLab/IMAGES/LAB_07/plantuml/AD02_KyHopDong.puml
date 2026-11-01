@@ -1,0 +1,37 @@
+@startuml
+skinparam defaultFontName Arial
+skinparam defaultFontSize 15
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classAttributeIconSize 0
+skinparam ArrowColor #31556A
+skinparam classBackgroundColor #EEF5FA
+skinparam usecaseBackgroundColor #EEF5FA
+skinparam activityBackgroundColor #EEF5FA
+skinparam noteBackgroundColor #FFF6D9
+hide empty members
+title Câu 5b • Hoạt động con: ký hợp đồng chính thức
+start
+:Nhân sự: kiểm tra thử việc DAT;\nChọn dài hạn / ngắn hạn, hiệu lực đầu tháng;
+:Soạn hợp đồng và quyết định lương;
+if (Có bổ nhiệm?) then (Có)
+ :Soạn quyết định chức vụ và phụ cấp;
+else (Không)
+ :Mặc định chức vụ Nhân viên, phụ cấp 0;
+endif
+if (Hợp đồng dài hạn?) then (Có)
+ :Chuẩn bị số BHXH, BHYT và tỷ lệ đóng;
+else (Không)
+ :Ghi ngày hết hạn hợp đồng ngắn hạn;
+endif
+:Nhân viên và giám đốc: thống nhất, ký hồ sơ;
+:Hệ thống: BEGIN; khóa nhân viên; kiểm tra;
+if (Dữ liệu hợp lệ?) then (Không)
+ :ROLLBACK; báo lỗi; giữ dữ liệu cũ;
+ stop
+else (Có)
+ :Lưu hợp đồng, QĐ lương/chức vụ, BH nếu dài hạn;\nChuyển CHINH_THUC; COMMIT;
+ stop
+endif
+
+@enduml

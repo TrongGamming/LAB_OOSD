@@ -1,0 +1,68 @@
+@startuml UC02_DangKyDenKetThuc
+skinparam defaultFontName Arial
+skinparam dpi 140
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActorBorderColor #1F4E79
+skinparam UsecaseBorderColor #1F4E79
+skinparam UsecaseBackgroundColor #F3F6FA
+skinparam PackageBorderColor #7F7F7F
+skinparam RectangleBorderColor #1F4E79
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam ParticipantBorderColor #1F4E79
+skinparam StateBackgroundColor #F3F6FA
+skinparam StateBorderColor #1F4E79
+skinparam ClassBackgroundColor #F3F6FA
+skinparam ClassBorderColor #1F4E79
+skinparam EntityBackgroundColor #F3F6FA
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam ActivityBorderColor #1F4E79
+skinparam NoteBackgroundColor #FFF8DC
+left to right direction
+title Phân rã use case – Từ đăng ký tour (theo đoàn / theo chuyến) đến kết thúc tour
+actor "Nhân viên\nkinh doanh" as NVKD
+actor "Nhân viên\nđiều hành tour" as NVDH
+actor "Kế toán" as KT
+actor "Công ty\nbảo hiểm" <<Hệ thống ngoài>> as BH
+actor "Hệ thống Email" <<Hệ thống ngoài>> as MAIL
+rectangle "Đăng ký và thực hiện tour" {
+  usecase "UC04 Lập phiếu đăng ký\ntheo đoàn" as UC04
+  usecase "UC04.1 Tìm / thêm\nkhách đoàn" as U41
+  usecase "UC04.2 Chọn tour và\nngày đi bất kỳ" as U42
+  usecase "UC04.3 Thu tiền\nđặt cọc" as U43
+  usecase "UC04.4 Nhập danh sách\nngười đi cùng" as U44
+  usecase "UC05 Bán vé chuyến\ncho khách lẻ" as UC05
+  usecase "UC05.1 Chọn chuyến\ncòn chỗ" as U51
+  usecase "UC05.2 Tìm / thêm\nkhách lẻ" as U52
+  usecase "UC05.3 Chọn điểm đón\ntheo quy định" as U53
+  usecase "UC05.4 Thu tiền vé" as U54
+  usecase "UC07 Phân công nhân viên\nhướng dẫn" as UC07
+  usecase "Kiểm tra trùng\nlịch phân công" as KTL
+  usecase "UC08.1 Bắt đầu tour" as U81
+  usecase "UC08.2 Kết thúc tour" as U82
+  usecase "UC08.3 Hủy đoàn\n(mất cọc)" as U83
+  usecase "UC11 Thanh toán\nkinh phí đoàn" as UC11
+  usecase "UC10 Gửi và ghi nhận\nphiếu khảo sát" as UC10
+}
+NVKD --> UC04
+NVKD --> UC05
+NVKD --> UC10
+NVDH --> UC07
+NVDH --> U81
+NVDH --> U82
+NVDH --> U83
+KT --> UC11
+UC04 ..> U41 : <<include>>
+UC04 ..> U42 : <<include>>
+UC04 ..> U43 : <<include>>
+U44 ..> UC04 : <<extend>>\n[đoàn mua bảo hiểm]
+UC05 ..> U51 : <<include>>
+UC05 ..> U52 : <<include>>
+UC05 ..> U53 : <<include>>
+UC05 ..> U54 : <<include>>
+UC07 ..> KTL : <<include>>
+U83 ..> U81 : <<extend>>\n[đoàn không đi]
+U44 --> BH
+UC10 --> MAIL
+@enduml

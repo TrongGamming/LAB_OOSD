@@ -1,0 +1,46 @@
+@startuml SD07_NhacHanTra
+title Sequence – Gửi email nhắc hạn trả sách (UC-TĐ-01)
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam SwimlaneTitleFontStyle bold
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam StateBackgroundColor #F3F6FA
+skinparam ClassBackgroundColor #F3F6FA
+autonumber
+actor "Bộ lập lịch" as SCH
+control NhacHanJob as J
+control EmailService as ES
+database "Oracle – THUVIENSO" as DB
+actor "Dịch vụ email\n(SMTP trường)" as SMTP
+SCH -> J : Execute() lúc 06:00
+activate J
+J -> DB : sp_HuyDangKyHetHan
+DB --> J : số đăng ký đã hủy
+J -> DB : sp_QuetNhacHanTra(3)
+activate DB
+DB -> DB : INSERT NhatKyLapLich
+DB -> DB : INSERT EmailNhacHan cho phiếu\ncó HanTra = hôm nay + 3, chưa nhắc
+DB --> J : danh sách email ChoGui / Loi (SoLanThu < 3)
+deactivate DB
+loop với mỗi email
+  J -> ES : Gui(diaChi, tieuDe, noiDung)
+  activate ES
+  ES -> SMTP : SendMailAsync(MailMessage)
+  alt gửi được
+    SMTP --> ES : 250 OK
+    ES --> J : true
+    J -> DB : sp_CapNhatKetQuaEmail(:Id, 1, NULL, :NhatKy)
+  else lỗi / timeout
+    SMTP --> ES : lỗi
+    ES --> J : false + thông điệp
+    J -> DB : sp_CapNhatKetQuaEmail(:Id, 0, :Loi, :NhatKy)
+  end
+  deactivate ES
+end
+J --> SCH : hoàn tất
+deactivate J
+@enduml

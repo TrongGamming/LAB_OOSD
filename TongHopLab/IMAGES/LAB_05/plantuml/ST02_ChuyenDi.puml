@@ -1,0 +1,40 @@
+@startuml ST02_ChuyenDi
+skinparam defaultFontName Arial
+skinparam dpi 140
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActorBorderColor #1F4E79
+skinparam UsecaseBorderColor #1F4E79
+skinparam UsecaseBackgroundColor #F3F6FA
+skinparam PackageBorderColor #7F7F7F
+skinparam RectangleBorderColor #1F4E79
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam ParticipantBorderColor #1F4E79
+skinparam StateBackgroundColor #F3F6FA
+skinparam StateBorderColor #1F4E79
+skinparam ClassBackgroundColor #F3F6FA
+skinparam ClassBorderColor #1F4E79
+skinparam EntityBackgroundColor #F3F6FA
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam ActivityBorderColor #1F4E79
+skinparam NoteBackgroundColor #FFF8DC
+title Biểu đồ trạng thái – Chuyến đi khách lẻ
+[*] --> MoBan : lập lịch chuyến
+state "Mở bán" as MoBan {
+  state "Còn chỗ" as ConCho
+  state "Hết chỗ" as HetCho
+  [*] --> ConCho
+  ConCho --> ConCho : bán vé [còn chỗ sau khi bán]
+  ConCho --> HetCho : bán vé [hết chỗ]
+  HetCho --> ConCho : hủy vé
+}
+state "Đang đi" as DangDi
+state "Kết thúc" as KetThuc
+state "Hủy" as Huy
+MoBan --> DangDi : đến ngày đi\n[đã phân công 1 HDV]
+MoBan --> Huy : không đủ khách
+DangDi --> KetThuc : về TP.HCM\n/ gửi phiếu khảo sát
+KetThuc --> [*]
+Huy --> [*]
+@enduml

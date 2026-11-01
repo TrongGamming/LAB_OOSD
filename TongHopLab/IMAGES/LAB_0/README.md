@@ -1,0 +1,1 @@
+LAB 0 ghi lại môi trường Windows, JDK, Maven, IDE, Git và chạy starter project. Các hình trong Word là ảnh chụp thao tác, không phải sơ đồ phân tích/thiết kế, nên không có mô hình UML để lưu ở LAB này.

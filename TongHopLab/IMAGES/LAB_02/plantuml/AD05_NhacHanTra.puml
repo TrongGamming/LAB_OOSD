@@ -1,0 +1,36 @@
+@startuml AD05_NhacHanTra
+title Activity – Gửi email nhắc hạn trả sách (UC-TĐ-01)
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam SwimlaneTitleFontStyle bold
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam StateBackgroundColor #F3F6FA
+skinparam ClassBackgroundColor #F3F6FA
+|Bộ lập lịch|
+start
+:Kích hoạt lúc 06:00 hằng ngày;
+|Hệ thống|
+:Ghi NhatKyLapLich (bắt đầu);
+:Hủy các đăng ký giữ chỗ quá hạn nhận,\ntrả bản sao về Sẵn sàng;
+:Lấy phiếu Đang mượn có hạn trả = hôm nay + 3;
+:Loại các phiếu đã có email nhắc;
+:Tạo EmailNhacHan (Chờ gửi) cho từng phiếu;
+while (Còn email Chờ gửi / Lỗi và số lần thử < 3?) is ([Có])
+  :Gửi yêu cầu gửi thư;
+  |Dịch vụ email|
+  :Chuyển thư tới hộp thư độc giả;
+  |Hệ thống|
+  if (Phản hồi thành công?) then ([Có])
+    :Email -> Đã gửi, ghi thời điểm gửi;
+  else ([Không])
+    :Email -> Lỗi, tăng số lần thử,\nlưu thông điệp lỗi;
+  endif
+endwhile ([Không])
+:Cập nhật NhatKyLapLich\n(số quét, thành công, lỗi, kết thúc);
+|Bộ lập lịch|
+stop
+@enduml

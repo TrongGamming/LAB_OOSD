@@ -1,0 +1,139 @@
+@startuml CL02_ChiTiet
+skinparam defaultFontName Arial
+skinparam dpi 140
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActorBorderColor #1F4E79
+skinparam UsecaseBorderColor #1F4E79
+skinparam UsecaseBackgroundColor #F3F6FA
+skinparam PackageBorderColor #7F7F7F
+skinparam RectangleBorderColor #1F4E79
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam ParticipantBorderColor #1F4E79
+skinparam StateBackgroundColor #F3F6FA
+skinparam StateBorderColor #1F4E79
+skinparam ClassBackgroundColor #F3F6FA
+skinparam ClassBorderColor #1F4E79
+skinparam EntityBackgroundColor #F3F6FA
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam ActivityBorderColor #1F4E79
+skinparam NoteBackgroundColor #FFF8DC
+hide circle
+hide empty members
+left to right direction
+title Biểu đồ lớp chi tiết – Tầng giao diện, nghiệp vụ và truy cập dữ liệu
+package "Forms (Boundary)" {
+  class FrmMain
+  class FrmTour
+  class FrmPhieuDoan
+  class FrmBanVe
+  class FrmPhanCong
+  class FrmLuongKhaoSat
+}
+package "Services (Control)" {
+  class KetQua {
+    +ThanhCong : bool
+    +ThongDiep : string
+    +Ma : string
+    +{static} Dat(thongDiep, ma) : KetQua
+    +{static} Loi(thongDiep) : KetQua
+    +{static} TuLoi(ex : Exception) : KetQua
+  }
+  class TourService {
+    +LayDanhSach(chiDangKinhDoanh : bool) : DataTable
+    +KiemTra(t : TourDto) : string
+    +Luu(t : TourDto, laThem : bool) : KetQua
+    +NgungKinhDoanh(maTour : string) : KetQua
+    +LayNoiDungChan(maTour : string) : DataTable
+    +ThemNoiDungChan(n : NoiDungChanDto) : KetQua
+    +XoaNoiDungChanCuoi(maTour : string) : KetQua
+    +LayDiemThamQuan(maTour : string) : DataTable
+  }
+  class PhieuDoanService {
+    +SoNguoiToiThieuDoan = 13
+    +TyLeCocToiThieu = 0.3
+    +LayKhachDoan() : DataTable
+    +LayDanhSachPhieu() : DataTable
+    +TinhKinhPhi(maTour : string, soNguoi : int) : decimal
+    +KiemTra(p, khachMoi, ds, tongKinhPhi) : string
+    +LapPhieu(p : PhieuDoanDto, khachMoi : KhachDoanDto, ds : List<NguoiDiCungDto>) : KetQua
+    +LuuDanhSach(soPhieu : string, ds : List<NguoiDiCungDto>) : KetQua
+    +ChuyenTrangThai(soPhieu : string, trangThaiMoi : string) : KetQua
+  }
+  class ChuyenVeService {
+    +SoNguoiToiDaKhachLe = 12
+    +LayChuyen() : DataTable
+    +LayVe(maChuyen : string) : DataTable
+    +TimKhachLe(soGiayTo : string) : DataRow
+    +ThemChuyen(maTour, ngayDi, soCho) : KetQua
+    +BanVe(v : VeDto, khachMoi : KhachLeDto) : KetQua
+    +HuyVe(soVe : string) : KetQua
+    +ChuyenTrangThai(maChuyen : string, trangThaiMoi : string) : KetQua
+  }
+  class PhanCongService {
+    +SoKhachMoiHDV = 25
+    +LayDoanVaChuyenCanPhanCong() : DataTable
+    +LayNhanVienRanh(tu : DateTime, den : DateTime) : DataTable
+    +LayDaPhanCong(soPhieu, maChuyen) : DataTable
+    +PhanCong(maNV : string, soPhieu : string, maChuyen : string) : KetQua
+    +HuyPhanCong(maPhanCong : int) : KetQua
+  }
+  class BaoCaoService {
+    +BangLuong(thang : int, nam : int) : DataTable
+    +LayKhaoSat() : DataTable
+    +GhiNhanKhaoSat(ma : int, muc : int, gopY : string) : KetQua
+  }
+  class PhieuDoanDto {
+    +MaKD, MaTour, DiaDiemDon : string
+    +NgayDi : DateTime
+    +SoNguoi : int
+    +CoBaoHiem : bool
+    +TienCoc : decimal
+  }
+  class KhachDoanDto {
+    +TenCoQuan, DiaChi, DienThoai
+    +NguoiDaiDien, Email : string
+  }
+  class NguoiDiCungDto {
+    +HoTen, SoGiayTo : string
+    +NgaySinh : DateTime
+  }
+  class VeDto {
+    +MaChuyen, MaKL, MaDiemBan, MaDiemDon : string
+    +SoNguoi : int
+  }
+}
+package "Data" {
+  class Db <<static>> {
+    +ConnectionString : string
+    +P(ten, giaTri) : OracleParameter
+    +Query(sql, params) : DataTable
+    +Execute(sql, params) : int
+    +Scalar(sql, params) : object
+    +Transaction(congViec : Action<Conn, Tx>)
+    +SinhMa(seq, tienTo, soChuSo) : string
+  }
+}
+FrmMain ..> FrmTour
+FrmMain ..> FrmPhieuDoan
+FrmMain ..> FrmBanVe
+FrmMain ..> FrmPhanCong
+FrmMain ..> FrmLuongKhaoSat
+FrmTour --> TourService
+FrmPhieuDoan --> PhieuDoanService
+FrmBanVe --> ChuyenVeService
+FrmPhanCong --> PhanCongService
+FrmLuongKhaoSat --> BaoCaoService
+TourService ..> Db
+PhieuDoanService ..> Db
+ChuyenVeService ..> Db
+PhanCongService ..> Db
+BaoCaoService ..> Db
+PhieuDoanService ..> KetQua
+ChuyenVeService ..> KetQua
+PhieuDoanService ..> PhieuDoanDto
+PhieuDoanService ..> KhachDoanDto
+PhieuDoanService ..> NguoiDiCungDto
+ChuyenVeService ..> VeDto
+@enduml

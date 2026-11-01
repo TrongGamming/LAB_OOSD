@@ -1,0 +1,44 @@
+@startuml UC03_QuanLyTour
+skinparam defaultFontName Arial
+skinparam dpi 140
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActorBorderColor #1F4E79
+skinparam UsecaseBorderColor #1F4E79
+skinparam UsecaseBackgroundColor #F3F6FA
+skinparam PackageBorderColor #7F7F7F
+skinparam RectangleBorderColor #1F4E79
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam ParticipantBorderColor #1F4E79
+skinparam StateBackgroundColor #F3F6FA
+skinparam StateBorderColor #1F4E79
+skinparam ClassBackgroundColor #F3F6FA
+skinparam ClassBorderColor #1F4E79
+skinparam EntityBackgroundColor #F3F6FA
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam ActivityBorderColor #1F4E79
+skinparam NoteBackgroundColor #FFF8DC
+left to right direction
+title Phân rã use case UC02 – Quản lý tour
+actor "Nhân viên\nđiều hành tour" as NVDH
+actor "Website\ncông ty" <<Hệ thống ngoài>> as WEB
+rectangle "UC02 Quản lý tour" {
+  usecase "UC02.1 Thêm tour" as A
+  usecase "UC02.2 Sửa thông tin tour" as B
+  usecase "UC02.3 Ngừng kinh doanh tour" as C
+  usecase "UC02.4 Quản lý nơi dừng chân\n(phương tiện, nơi ăn, khách sạn)" as N
+  usecase "UC02.5 Gán điểm tham quan" as T
+  usecase "UC02.6 Đăng thông tin\ntour lên website" as W
+  usecase "Kiểm tra số ngày /\nsố đêm hợp lệ" as K
+}
+NVDH --> A
+NVDH --> B
+NVDH --> C
+NVDH --> N
+NVDH --> T
+A ..> K : <<include>>
+B ..> K : <<include>>
+W ..> A : <<extend>>\n[tour đang kinh doanh]
+W --> WEB
+@enduml

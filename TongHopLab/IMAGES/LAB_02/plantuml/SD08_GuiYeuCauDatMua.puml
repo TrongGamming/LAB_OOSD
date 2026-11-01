@@ -1,0 +1,41 @@
+@startuml SD08_GuiYeuCauDatMua
+title Sequence – Gửi yêu cầu đặt mua (UC-TK-03) và xem kết quả (UC-TK-04)
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam SwimlaneTitleFontStyle bold
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam StateBackgroundColor #F3F6FA
+skinparam ClassBackgroundColor #F3F6FA
+autonumber
+actor "Độc giả" as U
+boundary FrmDatMua as F
+control DatMuaService as S
+database "Oracle – THUVIENSO" as DB
+note over U, F : Điều kiện: đã đăng nhập (UC-TK-02) – FrmMain chỉ mở FrmDatMua khi phiên có VaiTro = DocGia
+U -> F : nhập tên sách, tác giả, năm XB, lý do; bấm Gửi
+activate F
+F -> F : ErrorProvider kiểm tra 3 trường bắt buộc
+F -> S : GuiYeuCau(maTaiKhoan, yeuCau)
+activate S
+S -> DB : sp_GuiYeuCauDatMua(:MaTK, :TenSach, :TacGia, :Nam, ...)
+alt thiếu trường / trùng yêu cầu đang chờ
+  DB --> S : RAISE_APPLICATION_ERROR -20051 / -20052
+  S --> F : Loi(thông điệp)
+else
+  DB --> S : MaYeuCau
+  S --> F : Ok(MaYeuCau)
+end
+deactivate S
+F -> S : LayYeuCauCuaToi(maTaiKhoan)
+activate S
+S -> DB : SELECT ... FROM YeuCauDatMua\nWHERE MaTaiKhoan = :Ma ORDER BY NgayGui DESC
+DB --> S : danh sách + trạng thái + kết quả
+S --> F : List<YeuCauDatMua>
+deactivate S
+F --> U : hiển thị danh sách và kết quả xét duyệt
+deactivate F
+@enduml

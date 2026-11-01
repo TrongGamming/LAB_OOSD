@@ -1,0 +1,48 @@
+@startuml
+skinparam defaultFontName Arial
+skinparam defaultFontSize 15
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classAttributeIconSize 0
+skinparam ArrowColor #31556A
+skinparam classBackgroundColor #EEF5FA
+skinparam usecaseBackgroundColor #EEF5FA
+skinparam activityBackgroundColor #EEF5FA
+skinparam noteBackgroundColor #FFF6D9
+hide empty members
+title Câu 6 • Sequence: lập quyết định khen thưởng cá nhân/tập thể
+actor "Nhân sự" as NS
+boundary "MainForm" as UI
+control "HrService" as S
+database "Oracle" as DB
+actor "Giám đốc" as GD
+NS -> UI : Chọn đối tượng, lý do, số tiền, cách chi
+UI -> S : Decision(KHEN_THUONG,...)
+S -> DB : BEGIN; khóa kỳ lương; kiểm tra đối tượng
+alt Sai mã / tiền không hợp lệ
+ DB --> S : Lỗi ràng buộc
+ S -> DB : ROLLBACK
+ S --> UI : Báo lỗi, không lưu
+else Hợp lệ
+ S -> DB : INSERT QuyetDinhKTKL(DU_THAO)\nINSERT DoiTuongQD; COMMIT
+ S --> UI : Mã quyết định
+end
+GD -> UI : Xem nội dung và xác nhận ký
+UI -> S : SignDecision(maQD, nguoiKy)
+S -> DB : BEGIN; khóa quyết định; kiểm tra DU_THAO
+alt Cá nhân
+ S -> DB : Lấy nhân viên còn làm việc
+else Tập thể phòng ban
+ S -> DB : Lấy danh sách nhân viên phòng tại lúc ký
+ S -> S : Chia đều tổng tiền; dòng cuối nhận phần dư
+end
+alt Không có người nhận / đã ký
+ S -> DB : ROLLBACK
+ S --> UI : Báo lỗi
+else Có người nhận
+ S -> DB : INSERT PhanBoQD (chụp danh sách)\nUPDATE DA_KY, người ký, ngày ký; COMMIT
+ S --> UI : Quyết định đã ký và danh sách phân bổ
+end
+note over S,DB : Sau khi ký: TRUC_TIEP → Settle tạo phiếu CHI;\nQUA_LUONG → MakePayroll cộng thưởng và gắn kỳ một lần.\nChưa ký không được chi; lỗi giữa chừng rollback toàn bộ.
+
+@enduml

@@ -1,0 +1,48 @@
+@startuml SD03_DangKyMuon
+title Sequence – Đăng ký mượn sách (UC-MT-01)
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam SwimlaneTitleFontStyle bold
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam StateBackgroundColor #F3F6FA
+skinparam ClassBackgroundColor #F3F6FA
+autonumber
+actor "Độc giả" as U
+boundary FrmTraCuu as F
+boundary FrmNhapMaThe as FT
+control MuonTraService as S
+database "Oracle – THUVIENSO" as DB
+U -> F : chọn tài liệu bản in, bấm "Đăng ký mượn"
+activate F
+F -> FT : ShowDialog()
+FT --> F : maThe (đã xác thực qua UC-XT-01)
+F -> S : DangKyMuon(maThe, maTaiLieu)
+activate S
+S -> DB : sp_DangKyMuon(:MaThe, :MaTaiLieu)
+activate DB
+DB -> DB : sp_XacThucMaThe
+DB -> DB : kiểm tra bản in, quá hạn,\nhạn mức 5 cuốn, trùng đăng ký
+alt vi phạm quy định
+  DB --> S : RAISE_APPLICATION_ERROR -2002x
+  S --> F : Loi(thông điệp)
+  F --> U : hiển thị lý do từ chối
+else hợp lệ
+  DB -> DB : SELECT MIN(MaBanSao) WHERE TinhTrang='SanSang'\nSELECT ... FOR UPDATE (khóa dòng)
+  alt hết bản sao
+    DB --> S : RAISE_APPLICATION_ERROR -20024
+    S --> F : Loi("Hết bản sao sẵn sàng")
+  else còn bản sao
+    DB -> DB : UPDATE BanSao -> DangGiu\nINSERT DangKyMuon(HanNhan = +2 ngày)\nCOMMIT; DBMS_SQL.RETURN_RESULT
+    DB --> S : MaDangKy, MaBanSaoGiu, HanNhan
+    deactivate DB
+    S --> F : Ok(DangKyInfo)
+    F --> U : "Đăng ký DK000031 – nhận sách trước 20/09/2026"
+  end
+end
+deactivate S
+deactivate F
+@enduml

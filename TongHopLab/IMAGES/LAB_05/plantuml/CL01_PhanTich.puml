@@ -1,0 +1,173 @@
+@startuml CL01_PhanTich
+skinparam defaultFontName Arial
+skinparam dpi 140
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActorBorderColor #1F4E79
+skinparam UsecaseBorderColor #1F4E79
+skinparam UsecaseBackgroundColor #F3F6FA
+skinparam PackageBorderColor #7F7F7F
+skinparam RectangleBorderColor #1F4E79
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam ParticipantBorderColor #1F4E79
+skinparam StateBackgroundColor #F3F6FA
+skinparam StateBorderColor #1F4E79
+skinparam ClassBackgroundColor #F3F6FA
+skinparam ClassBorderColor #1F4E79
+skinparam EntityBackgroundColor #F3F6FA
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam ActivityBorderColor #1F4E79
+skinparam NoteBackgroundColor #FFF8DC
+hide circle
+skinparam linetype ortho
+title Biểu đồ lớp phân tích – Quản lý công ty du lịch
+class Tour {
+  <<ID>> maTour
+  tenTour
+  soNgay
+  soDem
+  donGia
+  dangKinhDoanh
+  --
+  themNoiDungChan()
+  ganDiemThamQuan()
+  tinhKinhPhi(soNguoi)
+}
+class NoiDungChan {
+  <<ID>> maTour + thuTu
+  doiPhuongTien
+  coNoiAn
+  coKhachSan
+  loaiKhachSan
+}
+class DiaDanh {
+  <<ID>> maDiaDanh
+  tenDiaDanh
+}
+class PhuongTien {
+  <<ID>> maPT
+  tenPT
+}
+class DiemThamQuan {
+  <<ID>> maDTQ
+  tenDTQ
+  diaDiem
+  noiDung
+  yNghia
+}
+abstract class KhachHang {
+  dienThoai
+  diaChi
+}
+class KhachDoan {
+  <<ID>> maKD
+  tenCoQuan
+  nguoiDaiDien
+  email
+}
+class KhachLe {
+  <<ID>> maKL
+  hoTen
+  soGiayTo
+}
+class PhieuDangKyDoan {
+  <<ID>> soPhieu
+  ngayLap
+  ngayDi
+  ngayVe
+  soNguoi
+  diaDiemDon
+  coBaoHiem
+  tongKinhPhi
+  tienCoc
+  trangThai
+  --
+  lapPhieu()
+  batDau()
+  ketThuc()
+  huyMatCoc()
+  thanhToan()
+}
+class NguoiDiCung {
+  <<ID>> soPhieu + stt
+  hoTen
+  ngaySinh
+  soGiayTo
+}
+class ChuyenDi {
+  <<ID>> maChuyen
+  ngayDi
+  ngayVe
+  soChoToiDa
+  trangThai
+  --
+  soChoCon()
+  batDau()
+  ketThuc()
+}
+class VeChuyen {
+  <<ID>> soVe
+  soNguoi
+  donGia
+  thanhTien
+  ngayMua
+  --
+  ban()
+  huy()
+}
+class DiemBanVe {
+  <<ID>> maDiemBan
+  tenDiemBan
+  diaChi
+}
+class DiemDon {
+  <<ID>> maDiemDon
+  tenDiemDon
+  diaChi
+}
+class NhanVien {
+  <<ID>> maNV
+  hoTen
+  dienThoai
+  luongCanBan
+  --
+  kiemTraLichTrong(tu, den)
+  tinhLuong(thang, nam)
+}
+class PhanCong {
+  <<ID>> maPhanCong
+  ngayBatDau
+  ngayKetThuc
+  luongTour
+}
+class PhieuKhaoSat {
+  <<ID>> maKhaoSat
+  ngayGui
+  mucHaiLong
+  gopY
+  --
+  gui()
+  ghiNhan()
+}
+KhachHang <|-- KhachDoan
+KhachHang <|-- KhachLe
+Tour "1" *-- "1..*" NoiDungChan : gồm
+NoiDungChan "*" --> "1" DiaDanh : tại
+NoiDungChan "*" --> "1" PhuongTien : đi bằng
+Tour "*" --> "1" PhuongTien : về TP.HCM bằng
+Tour "*" -- "*" DiemThamQuan : ghi nhận
+KhachDoan "1" -- "*" PhieuDangKyDoan : đăng ký
+PhieuDangKyDoan "*" --> "1" Tour
+PhieuDangKyDoan "1" *-- "0..*" NguoiDiCung
+Tour "1" -- "*" ChuyenDi : lịch
+ChuyenDi "1" o-- "*" VeChuyen
+KhachLe "1" -- "*" VeChuyen : mua
+VeChuyen "*" --> "1" DiemBanVe : bán tại
+VeChuyen "*" --> "1" DiemDon : đón tại
+NhanVien "1" -- "*" PhanCong
+PhanCong "*" --> "0..1" PhieuDangKyDoan : theo đoàn
+PhanCong "0..1" --> "0..1" ChuyenDi : theo chuyến
+PhieuDangKyDoan "1" -- "0..1" PhieuKhaoSat
+VeChuyen "1" -- "0..1" PhieuKhaoSat
+@enduml

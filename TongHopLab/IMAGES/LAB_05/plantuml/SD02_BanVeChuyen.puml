@@ -1,0 +1,61 @@
+@startuml SD02_BanVeChuyen
+skinparam defaultFontName Arial
+skinparam dpi 140
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActorBorderColor #1F4E79
+skinparam UsecaseBorderColor #1F4E79
+skinparam UsecaseBackgroundColor #F3F6FA
+skinparam PackageBorderColor #7F7F7F
+skinparam RectangleBorderColor #1F4E79
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam ParticipantBorderColor #1F4E79
+skinparam StateBackgroundColor #F3F6FA
+skinparam StateBorderColor #1F4E79
+skinparam ClassBackgroundColor #F3F6FA
+skinparam ClassBorderColor #1F4E79
+skinparam EntityBackgroundColor #F3F6FA
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam ActivityBorderColor #1F4E79
+skinparam NoteBackgroundColor #FFF8DC
+autonumber
+title Biểu đồ tuần tự – Bán vé chuyến cho khách lẻ
+actor "Nhân viên\nkinh doanh" as NV
+boundary "FrmBanVe" as F
+control "ChuyenVeService" as S
+entity "ChuyenDi" as C
+entity "KhachLe" as K
+entity "VeChuyen" as V
+database "Oracle\n(DULICH)" as DB
+NV -> F : Mở form bán vé
+F -> S : LayChuyenMoBan()
+S -> DB : SELECT chuyến "Mở bán" + số chỗ còn
+DB --> F : danh sách chuyến
+NV -> F : Chọn chuyến, nhập CMND khách
+F -> S : TimKhachLe(soGiayTo)
+S -> DB : SELECT KhachLe
+alt Chưa có khách
+  F --> NV : Mở ô nhập khách mới
+  NV -> F : Nhập họ tên, điện thoại
+end
+NV -> F : Chọn điểm bán, điểm đón, số người (1..12)\nnhấn "Bán vé"
+F -> S : BanVe(maChuyen, khach, diemBan, diemDon, soNguoi)
+S -> C : soChoCon()
+alt soNguoi > số chỗ còn
+  S --> F : KetQua(false, "Chuyến không đủ chỗ")
+  F --> NV : Thông báo lỗi
+else đủ chỗ
+  S -> DB : BEGIN TRANSACTION
+  opt khách mới
+    S -> K : tạo khách lẻ
+    K -> DB : INSERT KhachLe
+  end
+  S -> V : tạo vé (SEQ_VE)
+  V -> DB : INSERT VeChuyen
+  DB -> DB : TRG_Ve_TinhTien, TRG_Ve_SoCho
+  S -> DB : COMMIT
+  S --> F : KetQua(true, soVe, thành tiền)
+  F --> NV : In vé, cập nhật số chỗ còn
+end
+@enduml

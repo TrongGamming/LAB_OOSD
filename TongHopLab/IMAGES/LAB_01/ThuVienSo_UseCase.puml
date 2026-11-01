@@ -1,0 +1,55 @@
+@startuml
+skinparam dpi 180
+left to right direction
+skinparam defaultFontName Arial
+actor "Độc giả" as DG
+actor "Thủ thư" as TT
+actor "Bộ lập lịch" as Timer
+TT --|> DG
+rectangle "Hệ thống thư viện số" {
+usecase "Tra cứu tài liệu" as TC
+usecase "Xem chi tiết" as CT
+usecase "Đọc trực tuyến" as DOC
+usecase "Tải sách điện tử" as TAI
+usecase "Xác thực mã thẻ" as THE
+usecase "Đăng ký mượn" as MUON
+usecase "Lập phiếu mượn" as LAP
+usecase "Ghi nhận trả sách" as TRA
+usecase "Đăng ký tài khoản" as DK
+usecase "Đăng nhập" as DN
+usecase "Gửi yêu cầu đặt mua" as DM
+usecase "Xem kết quả đặt mua" as KQ
+usecase "Đổi mật khẩu" as MK
+usecase "Cập nhật danh mục" as QL
+usecase "Xét duyệt đặt mua" as DUYET
+usecase "Báo cáo thống kê" as BC
+usecase "Gửi email nhắc hạn" as MAIL
+}
+DG -- TC
+DG -- CT
+DG -- DOC
+DG -- TAI
+DG -- MUON
+DG -- DK
+DG -- DN
+DG -- DM
+DG -- KQ
+DG -- MK
+TT -- LAP
+TT -- TRA
+TT -- QL
+TT -- DUYET
+TT -- BC
+Timer -- MAIL
+TAI ..> THE : <<include>>
+MUON ..> THE : <<include>>
+DM ..> DN : <<include>>
+KQ ..> DN : <<include>>
+MK ..> DN : <<include>>
+LAP ..> DN : <<include>>
+TRA ..> DN : <<include>>
+QL ..> DN : <<include>>
+DUYET ..> DN : <<include>>
+BC ..> DN : <<include>>
+DK ..> DN : <<extend>>
+@enduml

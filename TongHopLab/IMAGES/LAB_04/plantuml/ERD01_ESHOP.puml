@@ -1,0 +1,202 @@
+@startuml ERD01_ESHOP
+skinparam defaultFontName Arial
+skinparam dpi 140
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActorBorderColor #1F4E79
+skinparam UsecaseBorderColor #1F4E79
+skinparam UsecaseBackgroundColor #F3F6FA
+skinparam PackageBorderColor #7F7F7F
+skinparam RectangleBorderColor #1F4E79
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam ParticipantBorderColor #1F4E79
+skinparam StateBackgroundColor #F3F6FA
+skinparam StateBorderColor #1F4E79
+skinparam ClassBackgroundColor #F3F6FA
+skinparam ClassBorderColor #1F4E79
+skinparam EntityBackgroundColor #F3F6FA
+skinparam NoteBackgroundColor #FFF8DC
+title Sơ đồ thực thể – liên kết (ERD) – CSDL ESHOP (Oracle)
+hide circle
+skinparam linetype ortho
+entity NhomSanPham {
+  * MaNhom : VARCHAR2(10) <<PK>>
+  --
+  * TenNhom : NVARCHAR2(100) <<UQ>>
+  MoTa : NVARCHAR2(300)
+}
+entity SanPham {
+  * MaSP : VARCHAR2(20) <<PK>>
+  --
+  * TenSP : NVARCHAR2(200)
+  * MaNhom : VARCHAR2(10) <<FK>>
+  * NhaSanXuat : NVARCHAR2(100)
+  MoTa : NVARCHAR2(2000)
+  * GiaBan : NUMBER(12)
+  * TinhTrang : NVARCHAR2(20)
+  * NgayCapNhat : DATE
+}
+entity HinhAnhSanPham {
+  * MaHinh : NUMBER <<PK>>
+  --
+  * MaSP : VARCHAR2(20) <<FK>>
+  * DuongDan : VARCHAR2(300)
+  * ThuTu : NUMBER(2)
+}
+entity ThongSoKyThuat {
+  * MaSP : VARCHAR2(20) <<PK,FK>>
+  * TenThongSo : NVARCHAR2(100) <<PK>>
+  --
+  * GiaTri : NVARCHAR2(300)
+}
+entity KhachHang {
+  * MaKH : VARCHAR2(10) <<PK>>
+  --
+  * HoTen : NVARCHAR2(100)
+  * NgaySinh : DATE
+  * SoGiayTo : VARCHAR2(20) <<UQ>>
+  * DiaChi : NVARCHAR2(250)
+  * DienThoai : VARCHAR2(15)
+  * TenDangNhap : VARCHAR2(50) <<UQ>>
+  * MatKhauHash : VARCHAR2(64)
+  * Salt : VARCHAR2(32)
+  Email : VARCHAR2(100)
+  * NgayDangKy : DATE
+  * TrangThai : NVARCHAR2(20)
+}
+entity NhanVien {
+  * MaNV : VARCHAR2(10) <<PK>>
+  --
+  * HoTen : NVARCHAR2(100)
+  * TenDangNhap : VARCHAR2(50) <<UQ>>
+  * MatKhauHash : VARCHAR2(64)
+  * Salt : VARCHAR2(32)
+  * VaiTro : NVARCHAR2(30)
+}
+entity GioHang {
+  * MaGioHang : NUMBER <<PK>>
+  --
+  MaKH : VARCHAR2(10) <<FK>>
+  * NgayTao : DATE
+  * TrangThai : NVARCHAR2(30)
+}
+entity ChiTietGioHang {
+  * MaGioHang : NUMBER <<PK,FK>>
+  * MaSP : VARCHAR2(20) <<PK,FK>>
+  --
+  * SoLuong : NUMBER(5)
+  * NgayThem : DATE
+}
+entity LoaiPhieuDatHang {
+  * MaLoaiPhieu : VARCHAR2(10) <<PK>>
+  --
+  * TenLoai : NVARCHAR2(60)
+  * SoGioXuLy : NUMBER(4)
+  NguongMienPhi : NUMBER(12)
+}
+entity KhuVucGiaoHang {
+  * MaKhuVuc : VARCHAR2(10) <<PK>>
+  --
+  * TenKhuVuc : NVARCHAR2(100)
+}
+entity TinhThanh {
+  * MaTinh : VARCHAR2(10) <<PK>>
+  --
+  * TenTinh : NVARCHAR2(100)
+  * MaKhuVuc : VARCHAR2(10) <<FK>>
+}
+entity BangPhiGiaoHang {
+  * MaKhuVuc : VARCHAR2(10) <<PK,FK>>
+  * MaLoaiPhieu : VARCHAR2(10) <<PK,FK>>
+  --
+  * PhiGiao : NUMBER(12)
+}
+entity LoaiThe {
+  * MaLoaiThe : VARCHAR2(10) <<PK>>
+  --
+  * TenLoaiThe : NVARCHAR2(50)
+  * DoDaiSoThe : NUMBER(2)
+  * DoDaiCSV : NUMBER(1)
+  * LePhiGiaoDich : NUMBER(12)
+}
+entity TheTinDung {
+  * MaThe : NUMBER <<PK>>
+  --
+  * MaKH : VARCHAR2(10) <<FK>>
+  * MaLoaiThe : VARCHAR2(10) <<FK>>
+  * SoTheAn : VARCHAR2(25)
+  * ThangHetHan : NUMBER(2)
+  * NamHetHan : NUMBER(4)
+  * TenChuThe : NVARCHAR2(100)
+  * TokenThanhToan : VARCHAR2(64) <<UQ>>
+}
+entity DonDatHang {
+  * SoDonHang : VARCHAR2(12) <<PK>>
+  --
+  * MaKH : VARCHAR2(10) <<FK>>
+  * MaLoaiPhieu : VARCHAR2(10) <<FK>>
+  * ThoiDiemDat : DATE
+  * TenNguoiNhan : NVARCHAR2(100)
+  * DiaChiNhan : NVARCHAR2(250)
+  * MaTinh : VARCHAR2(10) <<FK>>
+  * DienThoaiNhan : VARCHAR2(15)
+  * TongTienHang : NUMBER(14)
+  * PhiGiaoHang : NUMBER(12)
+  * LePhiThe : NUMBER(12)
+  TongTriGia : <<virtual>>
+  * MaThe : NUMBER <<FK>>
+  * MaGiaoDich : VARCHAR2(40)
+  * TrangThai : NVARCHAR2(20)
+  * DaGuiEmail : CHAR(1)
+}
+entity ChiTietDonHang {
+  * SoDonHang : VARCHAR2(12) <<PK,FK>>
+  * MaSP : VARCHAR2(20) <<PK,FK>>
+  --
+  * SoLuong : NUMBER(5)
+  * DonGia : NUMBER(12)
+  ThanhTien : <<virtual>>
+}
+entity NhatKyThanhToan {
+  * MaNhatKy : NUMBER <<PK>>
+  --
+  * MaKH : VARCHAR2(10) <<FK>>
+  * MaLoaiThe : VARCHAR2(10) <<FK>>
+  * SoTheAn : VARCHAR2(25)
+  * SoTien : NUMBER(14)
+  * KetQua : NVARCHAR2(20)
+  MaGiaoDich : VARCHAR2(40)
+  LyDo : NVARCHAR2(200)
+  * ThoiDiem : DATE
+}
+entity NhatKyEmail {
+  * MaEmail : NUMBER <<PK>>
+  --
+  * SoDonHang : VARCHAR2(12) <<FK>>
+  * DiaChiEmail : VARCHAR2(100)
+  * TieuDe : NVARCHAR2(200)
+  NoiDung : NCLOB
+  * ThoiDiemGui : DATE
+}
+NhomSanPham ||--o{ SanPham
+SanPham ||--o{ HinhAnhSanPham
+SanPham ||--o{ ThongSoKyThuat
+KhachHang |o--o| GioHang
+GioHang ||--o{ ChiTietGioHang
+SanPham ||--o{ ChiTietGioHang
+KhachHang ||--o{ DonDatHang
+DonDatHang ||--|{ ChiTietDonHang
+SanPham ||--o{ ChiTietDonHang
+LoaiPhieuDatHang ||--o{ DonDatHang
+TinhThanh ||--o{ DonDatHang
+KhuVucGiaoHang ||--o{ TinhThanh
+KhuVucGiaoHang ||--o{ BangPhiGiaoHang
+LoaiPhieuDatHang ||--o{ BangPhiGiaoHang
+KhachHang ||--o{ TheTinDung
+LoaiThe ||--o{ TheTinDung
+TheTinDung ||--o{ DonDatHang
+KhachHang ||--o{ NhatKyThanhToan
+LoaiThe ||--o{ NhatKyThanhToan
+DonDatHang ||--o{ NhatKyEmail
+@enduml

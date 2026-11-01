@@ -1,0 +1,48 @@
+@startuml
+skinparam defaultFontName Arial
+skinparam defaultFontSize 15
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classAttributeIconSize 0
+skinparam ArrowColor #31556A
+skinparam classBackgroundColor #EEF5FA
+skinparam usecaseBackgroundColor #EEF5FA
+skinparam activityBackgroundColor #EEF5FA
+skinparam noteBackgroundColor #FFF6D9
+hide empty members
+title Ánh xạ thiết kế sang mã nguồn
+left to right direction
+class MainForm <<boundary>> {
++Recruitment()
++Contracts()
++Timekeeping()
++Awards()
++Salaries()
+}
+class HrService <<control>> {
++Recruit()
++Evaluate()
++Contract()
++Schedule()
++Attendance()
++Overtime()
++Decision()
++SignDecision()
++Settle()
++MakePayroll()
+}
+class Payroll <<domain>> {
++Calculate(): PayrollResult
+}
+class Db <<data access>> {
++Query()
++Atomic()
++Command()
+}
+class "Oracle 19c\n20 bảng + SEQ_NS" as O <<database>>
+MainForm --> HrService
+HrService --> Payroll
+HrService --> Db
+Db --> O
+
+@enduml

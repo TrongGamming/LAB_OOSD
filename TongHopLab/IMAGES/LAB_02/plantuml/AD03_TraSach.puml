@@ -1,0 +1,65 @@
+@startuml AD03_TraSach
+title Activity – Ghi nhận trả sách (UC-MT-03)
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam SwimlaneTitleFontStyle bold
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam StateBackgroundColor #F3F6FA
+skinparam ClassBackgroundColor #F3F6FA
+|Thủ thư|
+start
+:Mở chức năng Trả sách;
+repeat
+  :Quét mã bản sao;
+  if (Quét được?) then ([Không])
+    :Nhập mã thẻ độc giả;
+    |Hệ thống|
+    :Liệt kê sách độc giả đang mượn;
+    |Thủ thư|
+    :Chọn đúng cuốn;
+  else ([Có])
+  endif
+  |Hệ thống|
+  :Tìm phiếu mượn đang mở của bản sao;
+repeat while (Tìm thấy phiếu?) is ([Không] Báo lỗi, nhập lại) not ([Có])
+:Hiển thị độc giả, tên sách, ngày mượn, hạn trả;
+if (Quá hạn?) then ([Có])
+  :Tô đậm số ngày trễ để thủ thư nhắc nhở;
+else ([Không])
+endif
+|Thủ thư|
+:Kiểm tra tình trạng thực tế của sách;
+switch (Tình trạng?)
+case ([Nguyên vẹn])
+  :Bấm Xác nhận trả;
+  |Hệ thống|
+  :Phiếu -> Đã trả, ghi ngày trả, số ngày trễ;
+  :Bản sao -> Sẵn sàng (tồn +1);
+case ([Hư hỏng])
+  |Thủ thư|
+  :Nhập ghi chú hư hỏng (bắt buộc);
+  |Hệ thống|
+  :Phiếu -> Trả hư hỏng;
+  :Bản sao -> Cần kiểm tra (không cộng tồn);
+case ([Mất sách])
+  |Thủ thư|
+  :Nhập ghi chú báo mất;
+  |Hệ thống|
+  :Phiếu -> Mất; Bản sao -> Mất;
+endswitch
+|Hệ thống|
+if (Ghi dữ liệu thành công?) then ([Có])
+  :Thông báo thành công + số sách độc giả còn giữ;
+  |Thủ thư|
+  :Xếp sách về kệ / chuyển kiểm tra;
+else ([Không])
+  |Hệ thống|
+  :Rollback, giữ nguyên phiếu, báo lỗi;
+endif
+|Thủ thư|
+stop
+@enduml

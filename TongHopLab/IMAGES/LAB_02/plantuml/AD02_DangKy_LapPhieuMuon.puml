@@ -1,0 +1,82 @@
+@startuml AD02_DangKy_LapPhieuMuon
+title Activity – Đăng ký mượn và lập phiếu mượn\n(UC-MT-01, UC-MT-02, UC-XT-01)
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowColor #1F4E79
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityBackgroundColor #F3F6FA
+skinparam SwimlaneTitleFontStyle bold
+skinparam SequenceLifeLineBorderColor #7F7F7F
+skinparam ParticipantBackgroundColor #F3F6FA
+skinparam StateBackgroundColor #F3F6FA
+skinparam ClassBackgroundColor #F3F6FA
+|Độc giả|
+start
+:Chọn tài liệu bản in và bấm "Đăng ký mượn";
+:Nhập Mã thẻ thư viện;
+|Hệ thống|
+:Xác thực mã thẻ (UC-XT-01);
+if (Thẻ hợp lệ?) then ([Không])
+  :Báo lỗi thẻ;
+  |Độc giả|
+  stop
+else ([Có])
+endif
+|Hệ thống|
+if (Còn sách quá hạn chưa trả?) then ([Có])
+  :Từ chối đăng ký;
+  |Độc giả|
+  stop
+else ([Không])
+endif
+|Hệ thống|
+if (Đang mượn + giữ chỗ >= 5?) then ([Có])
+  :Từ chối – vượt hạn mức;
+  |Độc giả|
+  stop
+else ([Không])
+endif
+|Hệ thống|
+if (Còn bản sao Sẵn sàng?) then ([Không])
+  :Báo hết sách, gợi ý tài liệu cùng chủ đề;
+  |Độc giả|
+  stop
+else ([Có])
+endif
+|Hệ thống|
+:Khóa 1 bản sao -> Đang giữ;
+:Tạo DangKyMuon (Chờ nhận, hạn nhận = hôm nay + 2 ngày);
+:Hiển thị mã đăng ký và hạn nhận;
+|Độc giả|
+:Đến quầy thư viện trong hạn nhận;
+|Thủ thư|
+:Mở FrmMuonTra – tab Lập phiếu mượn;
+:Nhập/quét mã thẻ của độc giả;
+|Hệ thống|
+:Hiển thị các đăng ký Chờ nhận của thẻ;
+|Thủ thư|
+:Chọn đăng ký, lấy sách theo mã bản sao đang giữ;
+:Quét mã bản sao trên cuốn sách;
+|Hệ thống|
+if (Bản sao khớp đăng ký và đăng ký còn hạn?) then ([Có])
+  fork
+    :Cập nhật DangKyMuon -> Đã nhận;
+  fork again
+    :Cập nhật BanSao -> Đang mượn;
+  fork again
+    :Tạo PhieuMuon\n(hạn trả = ngày mượn + 14);
+  end fork
+  :In / hiển thị phiếu mượn;
+  |Thủ thư|
+  :Giao sách cho độc giả;
+  |Độc giả|
+  :Nhận sách;
+else ([Không])
+  |Hệ thống|
+  :Báo "Đăng ký hết hạn hoặc sai bản sao";
+  |Thủ thư|
+  :Hướng dẫn độc giả đăng ký lại;
+endif
+|Độc giả|
+stop
+@enduml

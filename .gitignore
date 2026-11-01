@@ -47,6 +47,9 @@
 !LAB_07/QuanLyNhanSu/**/App.config.example
 !LAB_08/
 !TongHopLab/BaoCaoTongHop.docx
+!TongHopLab/IMAGES/**/*
+
+TongHopLab/IMAGES/diagram_manifest.json
 TongHopLab/_build
 TongHopLab/LAB_OOSD
 TongHopLab/GOI_NOP_OOSD_1250080213.zip
