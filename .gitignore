@@ -45,6 +45,11 @@
 !LAB_07/QuanLyNhanSu/**/*.csproj
 !LAB_07/QuanLyNhanSu/*.sln
 !LAB_07/QuanLyNhanSu/**/App.config.example
+!LAB_08/
+!TongHopLab/BaoCaoTongHop.docx
+TongHopLab/_build
+TongHopLab/LAB_OOSD
+TongHopLab/GOI_NOP_OOSD_1250080213.zip
 
 # 6. App.config chứa mật khẩu Oracle của từng máy -> không đưa lên, dùng App.config.example làm mẫu
 LAB_02/ThuVienSo/ThuVienSo/App.config
@@ -53,6 +58,7 @@ LAB_04/EShopping/EShopping/App.config
 LAB_05/QuanLyDuLich/QuanLyDuLich/App.config
 LAB_06/QuanLyBenhAn/QuanLyBenhAn/App.config
 LAB_07/QuanLyNhanSu/QuanLyNhanSu/App.config
+
 
 # 7. Kết quả build, thư viện NuGet tải về và file cấu hình riêng của Visual Studio
 **/bin/
